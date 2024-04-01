@@ -1,0 +1,7 @@
+{
+  "name": "ProjectAkhir-CrossPlatt",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
