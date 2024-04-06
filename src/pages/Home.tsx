@@ -5,19 +5,14 @@ import './Home.css';
 const Home: React.FC = () => {
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Blank</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
+        <IonHeader>
+            <IonToolbar>
+                <IonTitle>Home</IonTitle>
+            </IonToolbar>
         </IonHeader>
-        <ExploreContainer />
-      </IonContent>
+        <IonContent>
+            
+        </IonContent>
     </IonPage>
   );
 };
