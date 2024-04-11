@@ -1,8 +1,9 @@
-import { IonIcon, IonLabel, IonRouterOutlet, IonTab, IonTabBar, IonTabButton, IonTabs } from "@ionic/react";
+import { IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs } from "@ionic/react";
 import { Redirect, Route } from "react-router";
-import { happy,  homeOutline,  sad, statsChartOutline, timeOutline } from "ionicons/icons";
-import Dashboard from './Dashboard';
-import History from './History'
+import { homeOutline,  person,  pricetagsOutline,  timeOutline } from "ionicons/icons";
+import Profile from "./Profile";
+import Category from './Category';
+import Reports from './Reports'
 import Home from "./Home";
 
 
@@ -12,21 +13,26 @@ const MemoryTabs: React.FC = () => {
             <IonRouterOutlet>
                 <Redirect exact path="/tabs" to="/tabs/home"/>
                 <Route path="/tabs/Home" component={Home}/>
-                <Route path="/tabs/dashboard" component={Dashboard}/>
-                <Route path="/tabs/history" component={History}/>
+                <Route path="/tabs/category" component={Category}/>
+                <Route path="/tabs/reports" component={Reports}/>
+                <Route path="/tabs/profile" component={Profile}/>
             </IonRouterOutlet>
             <IonTabBar color="tertiary" slot="bottom">
                 <IonTabButton tab="home" href="/tabs/home">
                     <IonIcon icon={homeOutline}/>
                     <IonLabel>Home</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="dashboard" href="/tabs/dashboard">
-                    <IonIcon icon={statsChartOutline}/>
-                    <IonLabel>Dashboard</IonLabel>
+                <IonTabButton tab="category" href="/tabs/category">
+                    <IonIcon icon={pricetagsOutline}/>
+                    <IonLabel>Category</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="history" href="/tabs/history">
+                <IonTabButton tab="reports" href="/tabs/reports">
                     <IonIcon icon={timeOutline}/>
-                    <IonLabel>History</IonLabel>
+                    <IonLabel>Reports</IonLabel>
+                </IonTabButton>
+                <IonTabButton tab="profile" href="/tabs/profile">
+                    <IonIcon icon={person}/>
+                    <IonLabel>Profile</IonLabel>
                 </IonTabButton>
             </IonTabBar>
         </IonTabs>
