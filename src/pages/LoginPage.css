@@ -1,0 +1,48 @@
+/* LoginPage.css */
+
+.avatar-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+
+  .logo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+
+  .logo-container img {
+    width: 150px; /* Atur lebar sesuai kebutuhan */
+    height: auto; /* Biarkan tinggi disesuaikan secara otomatis */
+    max-width: 100%; /* Pastikan gambar tidak melebihi lebar kontainer */
+  }
+
+
+
+  .input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    background-color: #f0f0f0; /* Warna latar belakang untuk input */
+    border: 1px solid #ccc; /* Tambahkan border */
+    border-radius: 5px; /* Tambahkan border-radius */
+    padding: 5px; /* Tambahkan padding */
+  }
+
+  .input-container ion-icon {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+
+  .input-field {
+    border: none; /* Hapus border pada input */
+    width: 100%; /* Pastikan input menempati seluruh lebar container */
+  }
+
+  .app-title {
+    font-size: 24px;
+    margin-top: 10px;
+  }
