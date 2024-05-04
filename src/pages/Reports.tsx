@@ -3,7 +3,7 @@ import { IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonHeader, Ion
 import { addOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router';
 
-const History: React.FC = () => (
+const Reports: React.FC = () => (
     <IonPage>
         <IonHeader>
             <IonToolbar>
@@ -16,4 +16,4 @@ const History: React.FC = () => (
     </IonPage>
 );
 
-export default History;
+export default Reports;

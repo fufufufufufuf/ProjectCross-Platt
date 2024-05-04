@@ -19,7 +19,7 @@ const LoginPage: React.FC = () => {
     const userData = JSON.parse(localStorage.getItem('userData') || '{}');
     if (username === userData.username && password === userData.password) {
       // Redirect ke halaman utama jika login berhasil
-      history.push('/home');
+      history.push('/tabs');
     } else {
       alert('Username atau password salah');
     }
