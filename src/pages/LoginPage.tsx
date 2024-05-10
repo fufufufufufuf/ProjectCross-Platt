@@ -1,32 +1,24 @@
-// LoginPage.tsx
-
 import React, { useState } from 'react';
 import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonIcon, IonRouterLink, IonAvatar, IonRow, IonCol } from '@ionic/react';
-import { personOutline, lockClosedOutline } from 'ionicons/icons'; // Import ikon
-import { useHistory } from 'react-router-dom'; // Import useHistory hook untuk navigasi
-import './LoginPage.css'; // File CSS untuk styling
+import { personOutline, lockClosedOutline } from 'ionicons/icons';
+import { useHistory } from 'react-router-dom';
+import './LoginPage.css';
 import logo from "./../gambar/b3.png";
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const history = useHistory(); // Inisialisasi useHistory hook
+  const history = useHistory();
 
   const handleLogin = () => {
-    // Lakukan validasi username dan password di sini
-    // Misalnya, Anda dapat menggunakan state management (misalnya Redux) atau memanggil API untuk validasi
-    // Untuk contoh ini, saya akan menggunakan validasi sederhana
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    if (username === userData.username && password === userData.password) {
-      // Redirect ke halaman utama jika login berhasil
-      history.push('/tabs');
-    } else {
-      alert('Username atau password salah');
-    }
+    // Assuming successful login
+    // Set username in local storage
+    localStorage.setItem('username', username);
+    // Redirect to HomeTabs page
+    history.push('/tabs');
   };
 
   const handleRegisterRedirect = () => {
-    // Redirect ke halaman pendaftaran saat tombol Register ditekan
     history.push('/register');
   };
 

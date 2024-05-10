@@ -1,18 +1,37 @@
+// Add.tsx
 import React, { useState } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonLabel, IonInput, IonSelect, IonSelectOption, IonButton, IonGrid, IonRow, IonCol, IonDatetime } from '@ionic/react';
+import { useHistory } from 'react-router-dom';
 
 const Add: React.FC = () => {
     const [amount, setAmount] = useState<number | undefined>();
     const [selectedCategory, setSelectedCategory] = useState<string>('');
     const [selectedType, setSelectedType] = useState<string>('');
     const [transactionDate, setTransactionDate] = useState<string>(new Date().toISOString());
+    const [accountBalance, setAccountBalance] = useState<number>(0); // Track account balance
+    const history = useHistory();
 
     const handleSaveTransaction = () => {
+        // Calculate new account balance based on transaction type
+        const newBalance = selectedType === 'income' ? accountBalance + (amount || 0) : accountBalance - (amount || 0);
+
+        // Update account balance
+        setAccountBalance(newBalance);
+
         // Proses menyimpan transaksi dengan jumlah, kategori, jenis, dan tanggal yang dipilih
-        console.log('Amount:', amount);
-        console.log('Selected Category:', selectedCategory);
-        console.log('Selected Type:', selectedType);
-        console.log('Transaction Date:', transactionDate);
+        const transactionDetails = {
+            amount: amount,
+            category: selectedCategory,
+            type: selectedType,
+            date: transactionDate,
+            balance: newBalance // Include balance in transaction details
+        };
+
+        // Navigate to Home page with transaction details and updated balance
+        history.push({
+            pathname: '/tabs/home',
+            state: { transactionDetails: transactionDetails, accountBalance: newBalance }
+        });
     };
 
     return (
@@ -86,5 +105,6 @@ const Add: React.FC = () => {
         </IonPage>
     );
 };
+
 
 export default Add;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonIcon, IonButton } from '@ionic/react';
-import { ellipse, add } from 'ionicons/icons';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonIcon, IonButton, IonAlert } from '@ionic/react';
+import { ellipse, add, trash } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 
 interface Category {
@@ -14,11 +14,13 @@ interface ParentColor {
 
 const Category: React.FC = () => {
     const [categories, setCategories] = useState<any[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
     const parentColor: ParentColor = {
         income: "success",
         expenses: "danger"
     };
     const history = useHistory();
+    const [showAlert, setShowAlert] = useState<boolean>(false);
 
     useEffect(() => {
         // Ambil kategori dari localStorage saat halaman dimuat
@@ -26,8 +28,27 @@ const Category: React.FC = () => {
         setCategories(storedCategories);
     }, []);
 
+    const handleDeleteCategory = (category: Category) => {
+        setSelectedCategory(category);
+        setShowAlert(true);
+    };
+
+
     const handleAddCategory = () => {
         history.push("/addcategory");
+    };
+    const handleConfirmDelete = () => {
+        if (selectedCategory) {
+            const updatedCategories = categories.filter(cat => cat.name !== selectedCategory.name);
+            setCategories(updatedCategories);
+            localStorage.setItem('categories', JSON.stringify(updatedCategories));
+            setSelectedCategory(null);
+        }
+        setShowAlert(false);
+    };
+
+    const handleCancelDelete = () => {
+        setShowAlert(false);
     };
 
     return (
@@ -63,6 +84,9 @@ const Category: React.FC = () => {
                         <IonItem key={index}>
                             <IonIcon slot="start" icon={ellipse} color={parentColor.income} />
                             <IonLabel>{category.name}</IonLabel>
+                            <IonButton slot="end" fill="clear" color="danger" onClick={() => handleDeleteCategory(category)}>
+                                <IonIcon icon={trash} />
+                            </IonButton>
                         </IonItem>
                     </IonList>
                 ))}
@@ -92,10 +116,31 @@ const Category: React.FC = () => {
                         <IonItem key={index}>
                             <IonIcon slot="start" icon={ellipse} color={parentColor.expenses} />
                             <IonLabel>{category.name}</IonLabel>
+                            <IonButton slot="end" fill="clear" color="danger" onClick={() => handleDeleteCategory(category)}>
+                                <IonIcon icon={trash} />
+                            </IonButton>
                         </IonItem>
                     </IonList>
                 ))}
                 </IonList>
+                <IonAlert
+                    isOpen={showAlert}
+                    onDidDismiss={() => setShowAlert(false)}
+                    header={'Confirm Delete'}
+                    message={`Are you sure you want to delete category '${selectedCategory?.name}'?`}
+                    buttons={[
+                        {
+                            text: 'Cancel',
+                            role: 'cancel',
+                            cssClass: 'secondary',
+                            handler: handleCancelDelete
+                        },
+                        {
+                            text: 'Delete',
+                            handler: handleConfirmDelete
+                        }
+                    ]}
+                />
             </IonContent>
         </IonPage>
     );

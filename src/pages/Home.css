@@ -1,0 +1,13 @@
+.headerToolbar {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.income-border {
+    border-left: 5px solid green; 
+  }
+  
+  .expense-border {
+    border-left: 5px solid red; 
+  }
+  
