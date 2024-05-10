@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonIcon, IonRouterLink, IonAvatar, IonRow, IonCol } from '@ionic/react';
 import { personOutline, lockClosedOutline } from 'ionicons/icons';
-import firebase from '../Firebase/firebase'; // Import Firebase
+import { auth } from '../Firebase/firebase'; 
 import { useHistory } from 'react-router-dom';
 import './LoginPage.css';
 import logo from "./../gambar/b3.png";
@@ -12,13 +12,13 @@ const LoginPage: React.FC = () => {
   const history = useHistory();
 
   const handleLogin = () => {
-    firebase.auth().signInWithEmailAndPassword(email, password)
+    auth.signInWithEmailAndPassword(email, password) // Corrected to use auth
       .then(() => {
-        // Jika login berhasil, navigasi ke halaman utama
+        // If login is successful, navigate to the home page
         history.push('/home');
       })
       .catch((error: Error) => {
-        // Tangani kesalahan login
+        // Handle login errors
         console.error('Login error:', error.message);
         alert('Failed to login: ' + error.message);
       });
