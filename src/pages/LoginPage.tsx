@@ -1,33 +1,27 @@
-// LoginPage.tsx
-
 import React, { useState } from 'react';
 import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonIcon, IonRouterLink, IonAvatar, IonRow, IonCol } from '@ionic/react';
-import { personOutline, lockClosedOutline } from 'ionicons/icons'; // Import ikon
-import { useHistory } from 'react-router-dom'; // Import useHistory hook untuk navigasi
-import './LoginPage.css'; // File CSS untuk styling
+import { personOutline, lockClosedOutline } from 'ionicons/icons';
+import firebase from '../Firebase/firebase'; // Import Firebase
+import { useHistory } from 'react-router-dom';
+import './LoginPage.css';
 import logo from "./../gambar/b3.png";
 
 const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const history = useHistory(); // Inisialisasi useHistory hook
+  const history = useHistory();
 
   const handleLogin = () => {
-    // Lakukan validasi username dan password di sini
-    // Misalnya, Anda dapat menggunakan state management (misalnya Redux) atau memanggil API untuk validasi
-    // Untuk contoh ini, saya akan menggunakan validasi sederhana
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    if (username === userData.username && password === userData.password) {
-      // Redirect ke halaman utama jika login berhasil
-      history.push('/home');
-    } else {
-      alert('Username atau password salah');
-    }
-  };
-
-  const handleRegisterRedirect = () => {
-    // Redirect ke halaman pendaftaran saat tombol Register ditekan
-    history.push('/register');
+    firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(() => {
+        // Jika login berhasil, navigasi ke halaman utama
+        history.push('/home');
+      })
+      .catch((error: Error) => {
+        // Tangani kesalahan login
+        console.error('Login error:', error.message);
+        alert('Failed to login: ' + error.message);
+      });
   };
 
   return (
@@ -39,48 +33,40 @@ const LoginPage: React.FC = () => {
           </IonAvatar>
         </div>
         <IonRow className="ion-text-center">
-            <IonCol>
-                <div className="logo-container">
-                <IonTitle className="ion-text-center app-title">Budget Buddy</IonTitle>
-                </div>
-                <p>Login with</p>
-                <IonButton>
-                <IonIcon slot="start" src="./../gambar/g.png" />
-                    Google
-                </IonButton>
-
-                <IonButton>
-                Facebook
-                </IonButton>
-            </IonCol>
+          <IonCol>
+            <div className="logo-container">
+              <IonTitle className="ion-text-center app-title">Budget Buddy</IonTitle>
+            </div>
+            <p>Login with</p>
+          </IonCol>
         </IonRow>
         <IonCol>
-            <div className="input-container">
+          <div className="input-container">
             <IonIcon icon={personOutline} />
             <IonInput
-                type="text"
-                placeholder="Username"
-                value={username}
-                onIonChange={(e) => setUsername(e.detail.value!)}
-                className="input-field"
+              type="email"
+              placeholder="Email"
+              value={email}
+              onIonChange={(e) => setEmail(e.detail.value!)}
+              className="input-field"
             />
-            </div>
-            <div className="input-container">
+          </div>
+          <div className="input-container">
             <IonIcon icon={lockClosedOutline} />
             <IonInput
-                type="password"
-                placeholder="Password"
-                value={password}
-                onIonChange={(e) => setPassword(e.detail.value!)}
-                className="input-field"
+              type="password"
+              placeholder="Password"
+              value={password}
+              onIonChange={(e) => setPassword(e.detail.value!)}
+              className="input-field"
             />
-            </div>
+          </div>
         </IonCol>
         <IonButton style={{ '--background': 'purple' }} expand="block" onClick={handleLogin}>
-            Login
+          Login
         </IonButton>
         <div className="register-container ion-text-center">
-          <p>Don't have an account yet? <IonRouterLink onClick={handleRegisterRedirect}>Register</IonRouterLink></p>
+          <p>Don't have an account yet? <IonRouterLink href="/register">Register</IonRouterLink></p>
         </div>
       </IonContent>
     </IonPage>
