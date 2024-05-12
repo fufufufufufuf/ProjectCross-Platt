@@ -1,6 +1,7 @@
-import React from 'react';
-import { IonCol, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/react';
+import React, { useEffect, useState } from 'react';
+import { IonCol, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonRow, IonAvatar, IonIcon } from '@ionic/react';
 import { useLocation } from 'react-router-dom';
+import { cameraOutline } from 'ionicons/icons'; // Import icon camera
 import './Home.css';
 
 // Define TransactionDetails interface
@@ -42,13 +43,39 @@ const Home: React.FC = () => {
     return null;
   };
 
+  // Get username and avatar from local storage
+  const [username, setUsername] = useState<string>('');
+  const [avatar, setAvatar] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedUsername = localStorage.getItem('username');
+    const storedAvatar = localStorage.getItem('avatar');
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+    if (storedAvatar) {
+      setAvatar(storedAvatar);
+    }
+  }, []);
+
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>
-            <IonCol className="ion-text-center">Home</IonCol>
-            <IonCol className="ion-text-end"> 
+          <IonRow>
+            <IonCol className="ion-text-start">
+              {avatar ? (
+                <IonAvatar slot="start">
+                  <img src={avatar} alt="Avatar" />
+                </IonAvatar>
+              ) : (
+                <IonAvatar slot="start">
+                  <IonIcon icon={cameraOutline} />
+                </IonAvatar>
+              )}
+              {username}
+            </IonCol>
+            <IonCol className="ion-text-end">
               <div>
                 <span>{day.trim()}</span>
               </div>
@@ -56,7 +83,7 @@ const Home: React.FC = () => {
                 <span>{date.trim()}</span>
               </div>
             </IonCol>
-          </IonTitle>
+          </IonRow>
         </IonToolbar>
       </IonHeader>
       <IonContent>

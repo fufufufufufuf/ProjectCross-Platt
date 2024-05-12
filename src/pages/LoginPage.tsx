@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonIcon, IonRouterLink, IonAvatar, IonRow, IonCol } from '@ionic/react';
+import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonIcon, IonRouterLink, IonAvatar, IonRow, IonCol, IonToast } from '@ionic/react';
 import { personOutline, lockClosedOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router-dom';
 import './LoginPage.css';
@@ -8,14 +8,22 @@ import logo from "./../gambar/b3.png";
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [showToast, setShowToast] = useState(false);
   const history = useHistory();
 
   const handleLogin = () => {
-    // Assuming successful login
-    // Set username in local storage
-    localStorage.setItem('username', username);
-    // Redirect to HomeTabs page
-    history.push('/tabs');
+    // Retrieve username and password from local storage
+    const storedUsername = localStorage.getItem('username');
+    const storedPassword = localStorage.getItem('password');
+    
+    // Check if the entered username and password match the stored values
+    if (username === storedUsername && password === storedPassword) {
+      // Redirect to HomeTabs page
+      history.push('/tabs');
+    } else {
+      // Show toast for invalid login
+      setShowToast(true);
+    }
   };
 
   const handleRegisterRedirect = () => {
@@ -37,7 +45,6 @@ const LoginPage: React.FC = () => {
                 </div>
                 <p>Login with</p>
                 <IonButton>
-                <IonIcon slot="start" src="./../gambar/g.png" />
                     Google
                 </IonButton>
 
@@ -74,6 +81,13 @@ const LoginPage: React.FC = () => {
         <div className="register-container ion-text-center">
           <p>Don't have an account yet? <IonRouterLink onClick={handleRegisterRedirect}>Register</IonRouterLink></p>
         </div>
+        {/* Toast for invalid login */}
+        <IonToast
+          isOpen={showToast}
+          onDidDismiss={() => setShowToast(false)}
+          message="Invalid username or password"
+          duration={2000}
+        />
       </IonContent>
     </IonPage>
   );

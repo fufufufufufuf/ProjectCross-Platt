@@ -1,23 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { IonButton, IonButtons, IonCard, IonCardContent, IonContent, IonHeader, IonIcon, IonAvatar, IonItem, IonLabel, IonPage, IonTitle, IonToolbar, IonToggle } from '@ionic/react';
+import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonToggle, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonIcon } from '@ionic/react';
 import { moonOutline, sunnyOutline, logOutOutline, helpCircleOutline, cloudDownloadOutline, cameraOutline } from 'ionicons/icons';
-import { useHistory, useLocation } from 'react-router';
+import { useHistory } from 'react-router';
 
 const Profile: React.FC = () => {
     const [darkMode, setDarkMode] = useState<boolean>(false);
     const [username, setUsername] = useState<string>('');
-    const [avatar, setAvatar] = useState<string | null>(null); // State untuk menyimpan URL gambar avatar
-    const toggleDarkMode = () => setDarkMode(!darkMode);
+    const [avatar, setAvatar] = useState<string | null>(null);
     const history = useHistory();
 
     useEffect(() => {
-        // Get username and avatar from local storage
         const storedUsername = localStorage.getItem('username');
-        const storedAvatar = localStorage.getItem('avatar');
+        const storedAvatar = localStorage.getItem(`avatar_${storedUsername}`);
         if (storedUsername) {
             setUsername(storedUsername);
         } else {
-            // If username not found in local storage, redirect to login
             history.push('/login');
         }
         if (storedAvatar) {
@@ -25,27 +22,22 @@ const Profile: React.FC = () => {
         }
     }, [history]);
 
-    // Logout function
+    const toggleDarkMode = () => setDarkMode(!darkMode);
+
     const logout = () => {
-        // Remove username and avatar from local storage
-        localStorage.removeItem('username');
-        localStorage.removeItem('avatar');
-        // Redirect to login page
         history.push('/login');
     };
 
-    // Function to handle image upload
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]; // Get the first file from input
+        const file = e.target.files?.[0];
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
-                const dataUrl = reader.result as string; // Convert image to data URL
-                setAvatar(dataUrl); // Set avatar state to display the uploaded image
-                // Save the image URL to local storage or perform other operations as needed
-                localStorage.setItem('avatar', dataUrl);
+                const dataUrl = reader.result as string;
+                setAvatar(dataUrl);
+                localStorage.setItem(`avatar_${username}`, dataUrl); // Simpan avatar baru dengan kunci yang sama dengan username
             };
-            reader.readAsDataURL(file); // Read file as data URL
+            reader.readAsDataURL(file);
         }
     };
 
@@ -103,7 +95,6 @@ const Profile: React.FC = () => {
                         </IonItem>
                     </IonCardContent>
                 </IonCard>
-                {/* Input for uploading new image */}
                 <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} id="upload-avatar" />
                 <IonButton expand="block" onClick={() => document.getElementById('upload-avatar')?.click()}>Change Avatar</IonButton>
             </IonContent>

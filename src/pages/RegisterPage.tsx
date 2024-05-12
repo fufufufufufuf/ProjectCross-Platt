@@ -1,5 +1,3 @@
-// RegisterPage.tsx
-
 import React, { useState } from 'react';
 import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonIcon, IonRouterLink, IonAvatar, IonRow, IonCol } from '@ionic/react';
 import { personOutline, lockClosedOutline, mailOutline } from 'ionicons/icons'; // Import ikon
@@ -14,13 +12,10 @@ const RegisterPage: React.FC = () => {
   const history = useHistory(); // Inisialisasi useHistory hook
 
   const handleRegister = () => {
-    // Lakukan proses pendaftaran di sini
-    // Misalnya, Anda dapat menggunakan state management (misalnya Redux) atau memanggil API untuk pendaftaran
-    // Untuk contoh ini, saya akan membuatkan alert sederhana untuk menampilkan data yang diinputkan
-    alert(`Username: ${username}, Email: ${email}, Password: ${password}`);
-    
     // Simpan informasi akun dalam localStorage
-    localStorage.setItem('userData', JSON.stringify({ username, email, password }));
+    localStorage.setItem('username', username);
+    localStorage.setItem('email', email);
+    localStorage.setItem('password', password);
 
     // Redirect ke halaman login setelah pendaftaran berhasil
     history.push('/login');
