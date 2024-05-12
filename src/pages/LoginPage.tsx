@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonIcon, IonRouterLink, IonAvatar, IonRow, IonCol } from '@ionic/react';
 import { personOutline, lockClosedOutline } from 'ionicons/icons';
-import { auth } from '../Firebase/firebase'; 
-import { useHistory } from 'react-router-dom';
+import { useHistory } from "react-router";
+import { loginUser } from "../Firebase/firebase";
+import { toast } from "../toast";
 import './LoginPage.css';
 import logo from "./../gambar/b3.png";
 
@@ -11,19 +12,13 @@ const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const history = useHistory();
 
-  const handleLogin = () => {
-    auth.signInWithEmailAndPassword(email, password) // Corrected to use auth
-      .then(() => {
-        // If login is successful, navigate to the home page
-        history.push('/home');
-      })
-      .catch((error: Error) => {
-        // Handle login errors
-        console.error('Login error:', error.message);
-        alert('Failed to login: ' + error.message);
-      });
-  };
-
+  async function login() {
+    const result: any = await loginUser(email, password);
+    if (result) {
+    history.replace('/home');
+    toast('you ve login now')
+    }
+    }
   return (
     <IonPage>
       <IonContent fullscreen className="ion-padding">
@@ -62,7 +57,7 @@ const LoginPage: React.FC = () => {
             />
           </div>
         </IonCol>
-        <IonButton style={{ '--background': 'purple' }} expand="block" onClick={handleLogin}>
+        <IonButton style={{ '--background': 'purple' }} expand="block" onClick={login}>
           Login
         </IonButton>
         <div className="register-container ion-text-center">

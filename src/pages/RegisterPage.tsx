@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonIcon, IonRouterLink, IonAvatar, IonRow, IonCol } from '@ionic/react';
 import { personOutline, lockClosedOutline, mailOutline } from 'ionicons/icons';
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import { useHistory } from 'react-router-dom';
+import { toast } from "../toast";
+import { registerUser } from "../Firebase/firebase";
+import { useHistory } from "react-router";
 import './RegisterPage.css';
 import logo from './../gambar/b3.png';
 
@@ -12,18 +12,19 @@ const RegisterPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const history = useHistory();
 
-  const handleRegister = () => {
-    firebase.auth().createUserWithEmailAndPassword(email, password)
-      .then(() => {
-        // Pendaftaran berhasil, navigasi ke halaman login
-        history.push('/login');
-      })
-      .catch((error: Error) => {
-        // Tangani kesalahan pendaftaran
-        console.error('Registration error:', error.message);
-        alert('Failed to register: ' + error.message);
-      });
-  };
+  async function register (){
+    if(password !== password){
+    return toast('Password do not match')
+    }
+    if (email.trim() === '' || password.trim() ===''){
+    return toast('Email or Password are requared')
+    }
+    const result = await registerUser(email, password)
+    if (result){
+    toast('You have registered successfully')
+    history.replace('/login')
+    }
+    }
 
   return (
     <IonPage>
@@ -71,7 +72,7 @@ const RegisterPage: React.FC = () => {
         </IonRow>
         <IonRow>
           <IonCol className="ion-text-center">
-            <IonButton style={{ '--background': 'purple' }} expand="block" onClick={handleRegister}>
+            <IonButton style={{ '--background': 'purple' }} expand="block" onClick={register}>
               Register
             </IonButton>
           </IonCol>
