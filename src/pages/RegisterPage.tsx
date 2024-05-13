@@ -1,92 +1,83 @@
 import React, { useState } from 'react';
-import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonIcon, IonRouterLink, IonAvatar, IonRow, IonCol } from '@ionic/react';
+import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonIcon, IonRouterLink, IonAvatar, IonRow, IonCol, IonText, IonGrid, IonCard, IonItem } from '@ionic/react';
 import { personOutline, lockClosedOutline, mailOutline } from 'ionicons/icons';
 import { toast } from "../toast";
-import { registerUser } from "../Firebase/firebase";
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { useHistory } from "react-router";
 import './RegisterPage.css';
-import logo from './../gambar/b3.png';
+
 
 const RegisterPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const history = useHistory();
 
-  async function register (){
-    if(password !== password){
-    return toast('Password do not match')
+  const register = async () => {
+    try {
+      const auth = getAuth();
+      await createUserWithEmailAndPassword(auth, email, password);
+      toast("Registration successful!");
+      // Redirect to login page or any other page upon successful registration
+      history.push("/login");
+    } catch (error) {
+      console.error(error);
+      toast("Registration failed. Please try again.");
     }
-    if (email.trim() === '' || password.trim() ===''){
-    return toast('Email or Password are requared')
-    }
-    const result = await registerUser(email, password)
-    if (result){
-    toast('You have registered successfully')
-    history.replace('/login')
-    }
-    }
+  };
 
   return (
+
     <IonPage>
-      <IonContent fullscreen className="ion-padding">
-        <div className="avatar-container ion-text-center">
-          <IonAvatar style={{ width: '150px', height: '150px' }}>
-            <img src={logo} alt="Avatar" />
-          </IonAvatar>
-        </div>
-        <IonRow className="ion-text-center">
-          <IonCol>
-            <div className="logo-container">
-              <IonTitle className="ion-text-center app-title">Budget Buddy</IonTitle>
-            </div>
-            <p>Sign Up with</p>
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <IonCol className="ion-text-center">
-            <div className="input-container">
-              <IonIcon icon={mailOutline} />
-              <IonInput
-                type="email"
-                placeholder="Email"
-                value={email}
-                onIonChange={(e) => setEmail(e.detail.value!)}
-                className="input-field"
-              />
-            </div>
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <IonCol className="ion-text-center">
-            <div className="input-container">
-              <IonIcon icon={lockClosedOutline} />
-              <IonInput
-                type="password"
-                placeholder="Password"
-                value={password}
-                onIonChange={(e) => setPassword(e.detail.value!)}
-                className="input-field"
-              />
-            </div>
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <IonCol className="ion-text-center">
-            <IonButton style={{ '--background': 'purple' }} expand="block" onClick={register}>
-              Register
-            </IonButton>
-          </IonCol>
-        </IonRow>
-        <IonRow>
-          <IonCol className="ion-text-center">
-            <div className="login-container">
-              <p>Already have an account? <IonRouterLink href="/login">Login</IonRouterLink></p>
-            </div>
-          </IonCol>
-        </IonRow>
-      </IonContent>
+    <IonContent  className="ion-justify-content-center" color="light" fullscreen>
+    <IonCard className="ion-padding mg-card container-card">
+    <IonTitle className="ion-title ion-text-center ion-padding ion-margin">
+    Register
+    </IonTitle>
+    <IonGrid className=" mg-grid">
+    <IonRow className="ion-justify-content-between">
+    <IonCol size="0" />
+    <IonCol size="12" className="mg-col">
+    <IonItem>
+    <IonInput
+    type="email"
+    placeholder="Email"
+    onIonChange={(e: any) => setEmail(e.target.value)}
+    />
+    </IonItem>
+    <IonItem>
+    <IonInput
+    type="password"
+    placeholder="Password"
+    onIonChange={(e: any) => setPassword(e.target.value)}
+    />
+    </IonItem>
+    <IonItem>
+    <IonInput
+    type="password"
+    placeholder="Confirm Password"
+    onIonChange={(e: any) => setPassword(e.target.value)}
+    />
+    </IonItem>
+    </IonCol>
+    <IonCol size="0" />
+    </IonRow>
+    <IonRow className="ion-justify-content-between ion-margin">
+    <IonCol>
+    <IonButton expand="block">
+    Register
+    </IonButton>
+    </IonCol>
+    </IonRow>
+    <IonRow className="ion-justify-content-between ion-text-center ion-margin">
+    <IonCol>
+    <IonText className="ion-margin-top">Have an accout ? <IonRouterLink href="/login">Log In</IonRouterLink></IonText>
+    </IonCol>
+    </IonRow>
+    </IonGrid>
+    </IonCard>
+    </IonContent>
     </IonPage>
-  );
+    )
 };
 
 export default RegisterPage;

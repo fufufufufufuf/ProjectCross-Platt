@@ -1,7 +1,7 @@
 // firebase.ts
 
 import firebase from 'firebase/app';
-import 'firebase/auth'; // Import modul auth dari firebase
+import { getAuth } from "firebase/auth";
 import { toast } from '../toast';
 
 const firebaseConfig = {
@@ -17,30 +17,30 @@ const firebaseConfig = {
 // Inisialisasi Firebase
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
-export const auth = firebase.auth(); // Mendapatkan instance auth dari firebase
+export const auth = getAuth(firebaseApp);
 
 export default firebaseApp;
 
-// Membuat akun baru user
-export async function registerUser(email: string, password: string) {
-  try {
-    const result = await auth.createUserWithEmailAndPassword(email, password);
-    console.log(result);
-    return true;
-  } catch (error) {
-    console.error(error);
-    return toast("Email has already been used"); // Memperbaiki pesan toast
-  }
-}
+// // Membuat akun baru user
+// export async function registerUser(email: string, password: string) {
+//   try {
+//     const result = await auth.createUserWithEmailAndPassword(email, password);
+//     console.log(result);
+//     return true;
+//   } catch (error) {
+//     console.error(error);
+//     return toast("Email has already been used"); // Memperbaiki pesan toast
+//   }
+// }
 
 // Login dengan akun yang sudah dibuat
-export async function loginUser(email: string, password: string) {
-  try {
-    const result = await auth.signInWithEmailAndPassword(email, password);
-    console.log(result);
-    return result;
-  } catch (error) {
-    console.error(error);
-    return toast("Login failed, please check your password and email"); // Memperbaiki pesan toast
-  }
-}
+// export async function loginUser(email: string, password: string) {
+//   try {
+//     const result = await auth.signInWithEmailAndPassword(email, password);
+//     console.log(result);
+//     return result;
+//   } catch (error) {
+//     console.error(error);
+//     return toast("Login failed, please check your password and email"); // Memperbaiki pesan toast
+//   }
+// }
