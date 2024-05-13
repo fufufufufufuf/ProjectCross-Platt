@@ -63,7 +63,7 @@ const RegisterPage: React.FC = () => {
     </IonRow>
     <IonRow className="ion-justify-content-between ion-margin">
     <IonCol>
-    <IonButton expand="block">
+    <IonButton expand="block" onClick={register}>
     Register
     </IonButton>
     </IonCol>
