@@ -94,14 +94,14 @@ const Home: React.FC = () => {
         <IonToolbar>
           <IonButton
             className="type-button"
-            color={transactionDetails?.type === 'income' ? 'success' : 'medium'}
+            color={transactionDetails?.type === 'income' ? 'success' : 'dark'}
             onClick={() => console.log('Income selected')}
           >
             Income
           </IonButton>
           <IonButton
             className="type-button"
-            color={transactionDetails?.type === 'expenses' ? 'danger' : 'medium'}
+            color={transactionDetails?.type === 'expenses' ? 'danger' : 'dark'}
             onClick={() => console.log('Expenses selected')}
           >
             Expenses

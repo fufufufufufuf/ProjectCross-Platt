@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonItem, IonGrid, IonRow, IonCol, IonCard, IonText, IonRouterLink } from '@ionic/react';
+import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonItem, IonGrid, IonRow, IonCol, IonCard, IonText, IonRouterLink, IonLabel } from '@ionic/react';
 import { useHistory } from "react-router";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 import { toast } from "../toast";
@@ -37,7 +37,7 @@ const RegisterPage: React.FC = () => {
     <IonPage>
       <IonContent className="ion-justify-content-center" color="light" fullscreen>
         <IonCard className="ion-padding mg-card container-card">
-          <IonTitle className="ion-title ion-text-center ion-padding ion-margin">
+          <IonTitle color="primary" className="ion-title ion-text-center ion-padding ion-margin">
             Register
           </IonTitle>
           <IonGrid className="mg-grid">
@@ -70,15 +70,15 @@ const RegisterPage: React.FC = () => {
             </IonRow>
             <IonRow className="ion-justify-content-between ion-margin">
               <IonCol>
-                <IonButton expand="block" onClick={registerHandler}>
-                  Register
+                <IonButton color="tertiary" expand="block" onClick={registerHandler}>
+                  <IonLabel color="light">Register</IonLabel>
                 </IonButton>
               </IonCol>
             </IonRow>
             <IonRow className="ion-justify-content-between ion-text-center ion-margin">
               <IonCol>
-                <IonText className="ion-margin-top">
-                  Have an account? <IonRouterLink href="/login">Log In</IonRouterLink>
+                <IonText color="primary" className="ion-margin-top">
+                  Have an account? <IonRouterLink color="medium" href="/login">Log In</IonRouterLink>
                 </IonText>
               </IonCol>
             </IonRow>

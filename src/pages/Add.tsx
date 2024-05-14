@@ -68,7 +68,7 @@ const Add: React.FC = () => {
                         <IonCol>
                             <IonButton
                                 expand="full"
-                                color={selectedType === 'income' ? 'success' : 'medium'}
+                                color={selectedType === 'income' ? 'success' : 'dark'}
                                 onClick={() => setSelectedType('income')}
                             >
                                 Income
@@ -77,7 +77,7 @@ const Add: React.FC = () => {
                         <IonCol>
                             <IonButton
                                 expand="full"
-                                color={selectedType === 'expenses' ? 'danger' : 'medium'}
+                                color={selectedType === 'expenses' ? 'danger' : 'dark'}
                                 onClick={() => setSelectedType('expenses')}
                             >
                                 Expenses
