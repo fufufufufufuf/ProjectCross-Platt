@@ -13,7 +13,7 @@ interface ParentColor {
 }
 
 const Category: React.FC = () => {
-    const [categories, setCategories] = useState<any[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<Category | null>(null);
     const parentColor: ParentColor = {
         income: "success",
@@ -23,25 +23,36 @@ const Category: React.FC = () => {
     const [showAlert, setShowAlert] = useState<boolean>(false);
 
     useEffect(() => {
-        // Ambil kategori dari localStorage saat halaman dimuat
+        const defaultCategories: Category[] = [
+            { name: "Gaji", type: "income" },
+            { name: "Investasi", type: "income" },
+            { name: "Usaha", type: "income" },
+            { name: "Makanan & Minuman", type: "expenses" },
+            { name: "Pendidikan", type: "expenses" },
+            { name: "Pajak", type: "expenses" },
+            { name: "Kendaraan", type: "expenses" },
+        ];
+
         const storedCategories = JSON.parse(localStorage.getItem('categories') || '[]');
-        setCategories(storedCategories);
+        setCategories([...defaultCategories, ...storedCategories]);
     }, []);
 
     const handleDeleteCategory = (category: Category) => {
-        setSelectedCategory(category);
-        setShowAlert(true);
+        if (category.type !== 'default') {
+            setSelectedCategory(category);
+            setShowAlert(true);
+        }
     };
-
 
     const handleAddCategory = () => {
         history.push("/addcategory");
     };
+
     const handleConfirmDelete = () => {
         if (selectedCategory) {
             const updatedCategories = categories.filter(cat => cat.name !== selectedCategory.name);
             setCategories(updatedCategories);
-            localStorage.setItem('categories', JSON.stringify(updatedCategories));
+            localStorage.setItem('categories', JSON.stringify(updatedCategories.filter(cat => cat.type !== 'default')));
             setSelectedCategory(null);
         }
         setShowAlert(false);
@@ -67,20 +78,7 @@ const Category: React.FC = () => {
                     <IonItem lines="none">
                         <IonLabel className="ion-text-center" color={parentColor.income}>Income</IonLabel>
                     </IonItem>
-                    <IonItem>
-                        <IonIcon slot="start" icon={ellipse} color={parentColor.income} />
-                        <IonLabel>Gaji</IonLabel>
-                    </IonItem>
-                    <IonItem>
-                        <IonIcon slot="start" icon={ellipse} color={parentColor.income} />
-                        <IonLabel>Investasi</IonLabel>
-                    </IonItem>
-                    <IonItem>
-                        <IonIcon slot="start" icon={ellipse} color={parentColor.income} />
-                        <IonLabel>Usaha</IonLabel>
-                    </IonItem>
-                    {categories.map((category, index) => (
-                    <IonList key={index}>
+                    {categories.filter(cat => cat.type === 'income').map((category, index) => (
                         <IonItem key={index}>
                             <IonIcon slot="start" icon={ellipse} color={parentColor.income} />
                             <IonLabel>{category.name}</IonLabel>
@@ -88,31 +86,13 @@ const Category: React.FC = () => {
                                 <IonIcon icon={trash} />
                             </IonButton>
                         </IonItem>
-                    </IonList>
-                ))}
+                    ))}
                 </IonList>
                 <IonList>
                     <IonItem lines="none">
                         <IonLabel className="ion-text-center" color={parentColor.expenses}>Expenses</IonLabel>
                     </IonItem>
-                    <IonItem>
-                        <IonIcon slot="start" icon={ellipse} color={parentColor.expenses} />
-                        <IonLabel>Makanan & Minuman</IonLabel>
-                    </IonItem>
-                    <IonItem>
-                        <IonIcon slot="start" icon={ellipse} color={parentColor.expenses} />
-                        <IonLabel>Pendidikan</IonLabel>
-                    </IonItem>
-                    <IonItem>
-                        <IonIcon slot="start" icon={ellipse} color={parentColor.expenses} />
-                        <IonLabel>Pajak</IonLabel>
-                    </IonItem>
-                    <IonItem>
-                        <IonIcon slot="start" icon={ellipse} color={parentColor.expenses} />
-                        <IonLabel>Kendaraan</IonLabel>
-                    </IonItem>
-                    {categories.map((category, index) => (
-                    <IonList key={index}>
+                    {categories.filter(cat => cat.type === 'expenses').map((category, index) => (
                         <IonItem key={index}>
                             <IonIcon slot="start" icon={ellipse} color={parentColor.expenses} />
                             <IonLabel>{category.name}</IonLabel>
@@ -120,8 +100,7 @@ const Category: React.FC = () => {
                                 <IonIcon icon={trash} />
                             </IonButton>
                         </IonItem>
-                    </IonList>
-                ))}
+                    ))}
                 </IonList>
                 <IonAlert
                     isOpen={showAlert}

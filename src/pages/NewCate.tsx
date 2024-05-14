@@ -7,23 +7,14 @@ const NewCate: React.FC = () => {
     const [categoryType, setCategoryType] = useState('');
     const history = useHistory();
 
-   
     const handleSaveCategory = () => {
-        // Proses penyimpanan kategori
-        console.log('Nama Kategori:', categoryName);
-        console.log('Tipe Kategori:', categoryType);
-
-        // Simpan kategori baru beserta tipe ke localStorage
         const newCategory = { name: categoryName, type: categoryType };
         const existingCategories = JSON.parse(localStorage.getItem('categories') || '[]');
         const updatedCategories = [...existingCategories, newCategory];
         localStorage.setItem('categories', JSON.stringify(updatedCategories));
 
-        // Redirect kembali ke halaman Category
         history.push("/tabs/category");
     };
-
-
 
     return (
         <IonPage>
@@ -37,7 +28,7 @@ const NewCate: React.FC = () => {
                     <IonLabel position="floating">Nama Kategori</IonLabel>
                     <IonInput value={categoryName} onIonChange={e => setCategoryName(e.detail.value!)}></IonInput>
                 </IonItem>
-                <IonItem >
+                <IonItem>
                     <IonLabel>Tipe Kategori</IonLabel>
                 </IonItem>
                 <IonGrid>
@@ -48,7 +39,7 @@ const NewCate: React.FC = () => {
                             </IonButton>
                         </IonCol>
                         <IonCol>
-                            <IonButton expand="block" color={categoryType === 'expense' ? 'danger' : 'medium'} onClick={() => setCategoryType('expense')}>
+                            <IonButton expand="block" color={categoryType === 'expenses' ? 'danger' : 'medium'} onClick={() => setCategoryType('expenses')}>
                                 Expense
                             </IonButton>
                         </IonCol>
