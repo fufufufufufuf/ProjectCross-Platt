@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonToggle, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonIcon } from '@ionic/react';
-import { moonOutline, sunnyOutline, logOutOutline, helpCircleOutline, cloudDownloadOutline } from 'ionicons/icons';
+import { moonOutline, sunnyOutline, logOutOutline, helpCircleOutline, cloudDownloadOutline, cameraOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
 import app from '../Firebase/firebase';
-import defaultAvatar from '../gambar/b3.png'; // Import default avatar image
 import "./Profile.css";
 
 const Profile: React.FC = () => {
@@ -98,7 +97,7 @@ const Profile: React.FC = () => {
                     <IonCardContent>
                         <IonItem color="secondary">
                             <IonAvatar slot="start" style={{ width: '90px', height: '90px' }}>
-                                {avatar ? <img src={avatar} alt="Avatar" /> : <img src={defaultAvatar} alt="Default Avatar" />} {/* Use default avatar image if avatar is not set */}
+                                {avatar ? <img src={avatar} alt="Avatar" /> : <IonIcon color="primary" icon={cameraOutline} style={{ fontSize: '48px', margin: '20px' }} />}
                             </IonAvatar>
                             <IonLabel color="primary" style={{ fontSize: '24px' }}>{username}</IonLabel>
                         </IonItem>
@@ -123,12 +122,6 @@ const Profile: React.FC = () => {
                         <IonItem color="secondary" button onClick={help}>
                             <IonIcon color="primary" icon={helpCircleOutline} slot="start" />
                             <IonLabel color="primary">Help</IonLabel>
-                        </IonItem>
-                    </IonCardContent>
-                    <IonCardContent>
-                        <IonItem color="secondary" button onClick={checkUpdate}>
-                            <IonIcon color="primary" icon={cloudDownloadOutline} slot="start" />
-                            <IonLabel color="primary">Check for Update</IonLabel>
                         </IonItem>
                     </IonCardContent>
                 </IonCard>
