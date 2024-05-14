@@ -35,6 +35,7 @@ import './theme/variables.css';
 import Login from './pages/LoginPage';
 import Register from './pages/RegisterPage';
 import HomeTabs from './pages/HomeTabs';
+import NewCate from './pages/NewCate';
 
 setupIonicReact();
 
@@ -45,6 +46,7 @@ const App: React.FC = () => (
         <Route path="/login" component={Login} />
         <Route path="/tabs" component={HomeTabs} />
         <Route path="/register" component={Register} />
+        <Route path="/addcategory" component={NewCate} />
         <Redirect exact from="/" to="/login" />
       </IonRouterOutlet>
     </IonReactRouter>

@@ -34,12 +34,12 @@ const NewCate: React.FC = () => {
                 <IonGrid>
                     <IonRow>
                         <IonCol>
-                            <IonButton expand="block" color={categoryType === 'income' ? 'success' : 'medium'} onClick={() => setCategoryType('income')}>
+                            <IonButton expand="block" color={categoryType === 'income' ? 'success' : 'dark'} onClick={() => setCategoryType('income')}>
                                 Income
                             </IonButton>
                         </IonCol>
                         <IonCol>
-                            <IonButton expand="block" color={categoryType === 'expenses' ? 'danger' : 'medium'} onClick={() => setCategoryType('expenses')}>
+                            <IonButton expand="block" color={categoryType === 'expenses' ? 'danger' : 'dark'} onClick={() => setCategoryType('expenses')}>
                                 Expense
                             </IonButton>
                         </IonCol>

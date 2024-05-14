@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonToggle, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonIcon } from '@ionic/react';
-import { moonOutline, sunnyOutline, logOutOutline, helpCircleOutline, cloudDownloadOutline, cameraOutline } from 'ionicons/icons';
+import { moonOutline, sunnyOutline, logOutOutline, helpCircleOutline, cloudDownloadOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router';
+import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
+import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
+import app from '../Firebase/firebase';
+import defaultAvatar from '../gambar/b3.png'; // Import default avatar image
 import "./Profile.css";
 
 const Profile: React.FC = () => {
@@ -10,31 +14,47 @@ const Profile: React.FC = () => {
     const [avatar, setAvatar] = useState<string | null>(null);
     const history = useHistory();
 
+    const auth = getAuth(app);
+    const storage = getStorage(app);
+
     useEffect(() => {
-        const storedUsername = localStorage.getItem('username');
-        const storedAvatar = localStorage.getItem(`avatar_${storedUsername}`);
-        if (storedUsername) {
-            setUsername(storedUsername);
-        } else {
-            history.push('/login');
-        }
-        if (storedAvatar) {
-            setAvatar(storedAvatar);
-        }
-    }, [history]);
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUsername(user.displayName || '');
+                const avatarRef = ref(storage, `avatars/${user.uid}`);
+                getDownloadURL(avatarRef)
+                    .then((url) => {
+                        setAvatar(url);
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching avatar:", error);
+                    });
+            } else {
+                history.push('/login');
+            }
+        });
+
+        return () => unsubscribe();
+    }, [auth, history, storage]);
 
     const toggleDarkMode = () => {
         const body = document.body;
         setDarkMode(!darkMode);
         if (!darkMode) {
-          body.classList.add('dark');
+            body.classList.add('dark');
         } else {
-          body.classList.remove('dark');
+            body.classList.remove('dark');
         }
     };
 
     const logout = () => {
-        history.push('/login');
+        signOut(auth)
+            .then(() => {
+                history.push('/login');
+            })
+            .catch((error) => {
+                console.error("Error signing out:", error);
+            });
     };
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,8 +63,16 @@ const Profile: React.FC = () => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 const dataUrl = reader.result as string;
-                setAvatar(dataUrl);
-                localStorage.setItem(`avatar_${username}`, dataUrl); // Simpan avatar baru dengan kunci yang sama dengan username
+                if (auth.currentUser) {
+                    const avatarRef = ref(storage, `avatars/${auth.currentUser.uid}`);
+                    uploadString(avatarRef, dataUrl, 'data_url')
+                        .then(() => {
+                            setAvatar(dataUrl);
+                        })
+                        .catch((error) => {
+                            console.error("Error uploading avatar:", error);
+                        });
+                }
             };
             reader.readAsDataURL(file);
         }
@@ -68,12 +96,12 @@ const Profile: React.FC = () => {
             <IonContent className={darkMode ? 'dark-theme' : undefined}>
                 <IonCard color="secondary">
                     <IonCardContent>
-                    <IonItem color="secondary">
-                        <IonAvatar slot="start" style={{ width: '90px', height: '90px' }}>
-                            {avatar ? <img src={avatar} alt="Avatar" /> : <IonIcon color="primary" icon={cameraOutline} style={{ fontSize: '48px', margin: '20px' }} />}
-                        </IonAvatar>
-                        <IonLabel color="primary" style={{ fontSize: '24px' }}>{username}</IonLabel>
-                    </IonItem>
+                        <IonItem color="secondary">
+                            <IonAvatar slot="start" style={{ width: '90px', height: '90px' }}>
+                                {avatar ? <img src={avatar} alt="Avatar" /> : <img src={defaultAvatar} alt="Default Avatar" />} {/* Use default avatar image if avatar is not set */}
+                            </IonAvatar>
+                            <IonLabel color="primary" style={{ fontSize: '24px' }}>{username}</IonLabel>
+                        </IonItem>
                     </IonCardContent>
                 </IonCard>
                 <IonCard color="secondary">

@@ -50,7 +50,7 @@ const Category: React.FC = () => {
 
     const handleConfirmDelete = () => {
         if (selectedCategory) {
-            const updatedCategories = categories.filter(cat => cat.name !== selectedCategory.name);
+            const updatedCategories = categories.filter(cat => cat.name !== selectedCategory.name); // Filter out the selected category
             setCategories(updatedCategories);
             localStorage.setItem('categories', JSON.stringify(updatedCategories.filter(cat => cat.type !== 'default')));
             setSelectedCategory(null);
@@ -78,7 +78,7 @@ const Category: React.FC = () => {
                     <IonItem lines="none">
                         <IonLabel className="ion-text-center" color={parentColor.income}>Income</IonLabel>
                     </IonItem>
-                    {categories.filter(cat => cat.type === 'income').map((category, index) => (
+                    {categories.filter((cat, index, self) => self.findIndex(c => c.name === cat.name) === index && cat.type === 'income').map((category, index) => (
                         <IonItem key={index}>
                             <IonIcon slot="start" icon={ellipse} color={parentColor.income} />
                             <IonLabel color="primary">{category.name}</IonLabel>
@@ -92,7 +92,7 @@ const Category: React.FC = () => {
                     <IonItem lines="none">
                         <IonLabel className="ion-text-center" color={parentColor.expenses}>Expenses</IonLabel>
                     </IonItem>
-                    {categories.filter(cat => cat.type === 'expenses').map((category, index) => (
+                    {categories.filter((cat, index, self) => self.findIndex(c => c.name === cat.name) === index && cat.type === 'expenses').map((category, index) => (
                         <IonItem key={index}>
                             <IonIcon slot="start" icon={ellipse} color={parentColor.expenses} />
                             <IonLabel color="primary">{category.name}</IonLabel>
@@ -125,4 +125,4 @@ const Category: React.FC = () => {
     );
 };
 
-export default Category;
+export default Category

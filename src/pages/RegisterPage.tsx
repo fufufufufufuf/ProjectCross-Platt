@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonItem, IonGrid, IonRow, IonCol, IonCard, IonText, IonRouterLink, IonLabel } from '@ionic/react';
 import { useHistory } from "react-router";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { toast } from "../toast";
 import app from "../Firebase/firebase"; // Import the initialized app
 import './RegisterPage.css';
 
 const RegisterPage: React.FC = () => {
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -21,9 +22,18 @@ const RegisterPage: React.FC = () => {
 
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        toast("Register Berhasil");
-        console.log(userCredential);
-        history.push('/login'); // Redirect to the home page or another page after successful registration
+        const user = userCredential.user;
+        // Use updateProfile to update the user's displayName
+        updateProfile(user, {
+          displayName: username
+        }).then(() => {
+          toast("Register Berhasil");
+          console.log(userCredential);
+          history.push('/login'); // Redirect to the home page or another page after successful registration
+        }).catch((error) => {
+          console.error(`Error updating profile: ${error.message}`);
+          toast("Registration succeeded but failed to set username, please update it in your profile");
+        });
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -44,6 +54,13 @@ const RegisterPage: React.FC = () => {
             <IonRow className="ion-justify-content-between">
               <IonCol size="0" />
               <IonCol size="12" className="mg-col">
+                <IonItem>
+                  <IonInput
+                    type="text"
+                    placeholder="Username"
+                    onIonChange={(e: any) => setUsername(e.target.value)}
+                  />
+                </IonItem>
                 <IonItem>
                   <IonInput
                     type="email"
