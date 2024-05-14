@@ -37,31 +37,31 @@ const Add: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Add Transaction</IonTitle>
+                <IonToolbar color="secondary">
+                    <IonTitle  color="primary">Add Transaction</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent>
                 <IonItem>
-                    <IonLabel position="floating">Amount</IonLabel>
-                    <IonInput type="number" value={amount} placeholder="Rp" onIonChange={e => setAmount(parseFloat(e.detail.value!))}></IonInput>
+                    <IonLabel color="primary" position="floating">Amount</IonLabel>
+                    <IonInput color="primary" type="number" value={amount} placeholder="Rp" onIonChange={e => setAmount(parseFloat(e.detail.value!))}></IonInput>
                 </IonItem>
                 <IonItem>
-                    <IonLabel position="stacked">Category</IonLabel>
-                    <IonSelect value={selectedCategory} placeholder="Select Category" onIonChange={e => setSelectedCategory(e.detail.value)}>
-                        <IonSelectOption value="Gaji">Gaji</IonSelectOption>
+                    <IonLabel color="primary" position="stacked">Category</IonLabel>
+                    <IonSelect  value={selectedCategory} placeholder="Select Category" onIonChange={e => setSelectedCategory(e.detail.value)}>
+                        <IonSelectOption  value="Gaji">Gaji</IonSelectOption>
                         <IonSelectOption value="Investasi">Investasi</IonSelectOption>
                         <IonSelectOption value="Usaha">Usaha</IonSelectOption>
-                        <IonSelectOption value="Makanan & Minuman">Makanan & Minuman</IonSelectOption>
-                        <IonSelectOption value="Pendidikan">Pendidikan</IonSelectOption>
-                        <IonSelectOption value="Pajak">Pajak</IonSelectOption>
+                        <IonSelectOption  value="Makanan & Minuman">Makanan & Minuman</IonSelectOption>
+                        <IonSelectOption  value="Pendidikan">Pendidikan</IonSelectOption>
+                        <IonSelectOption  value="Pajak">Pajak</IonSelectOption>
                         <IonSelectOption value="Kendaraan">Kendaraan</IonSelectOption>
                     </IonSelect>
                 </IonItem>
                 <IonGrid>
                     <IonRow>
                         <IonCol>
-                            <IonLabel position="stacked" style={{ paddingTop: '10px' }}>Type</IonLabel>
+                            <IonLabel color="primary" position="stacked" style={{ paddingTop: '10px' }}>Type</IonLabel>
                         </IonCol>
                     </IonRow>
                     <IonRow>
@@ -86,7 +86,7 @@ const Add: React.FC = () => {
                     </IonRow>
                 </IonGrid>
                 <IonItem>
-                    <IonLabel position="stacked">Transaction Date</IonLabel>
+                    <IonLabel color="primary" position="stacked">Transaction Date</IonLabel>
                     <IonGrid>
                         <IonRow>
                             <IonCol size="12" className="ion-text-center">
@@ -100,7 +100,7 @@ const Add: React.FC = () => {
                     </IonGrid>
                 </IonItem>
 
-                <IonButton expand="full" onClick={handleSaveTransaction}>Save Transaction</IonButton>
+                <IonButton color="tertiary" expand="full" onClick={handleSaveTransaction}><IonLabel color="light">Save Transaction</IonLabel></IonButton>
             </IonContent>
         </IonPage>
     );

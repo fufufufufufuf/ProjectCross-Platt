@@ -19,17 +19,17 @@ const NewCate: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
-                    <IonTitle>New Category</IonTitle>
+                <IonToolbar color="secondary">
+                    <IonTitle color="primary">New Category</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
                 <IonItem lines="full">
-                    <IonLabel position="floating">Nama Kategori</IonLabel>
-                    <IonInput value={categoryName} onIonChange={e => setCategoryName(e.detail.value!)}></IonInput>
+                    <IonLabel color="primary" position="floating">Nama Kategori</IonLabel>
+                    <IonInput color="primary" value={categoryName} onIonChange={e => setCategoryName(e.detail.value!)}></IonInput>
                 </IonItem>
                 <IonItem>
-                    <IonLabel>Tipe Kategori</IonLabel>
+                    <IonLabel color="primary">Tipe Kategori</IonLabel>
                 </IonItem>
                 <IonGrid>
                     <IonRow>
@@ -45,7 +45,7 @@ const NewCate: React.FC = () => {
                         </IonCol>
                     </IonRow>
                 </IonGrid>
-                <IonButton expand="full" onClick={handleSaveCategory}>Save</IonButton>
+                <IonButton color="tertiary" expand="full" onClick={handleSaveCategory}><IonLabel color="light">Save</IonLabel></IonButton>
             </IonContent>
         </IonPage>
     );

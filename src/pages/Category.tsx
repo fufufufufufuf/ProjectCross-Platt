@@ -65,14 +65,14 @@ const Category: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Category</IonTitle>
+                <IonToolbar color="secondary">
+                    <IonTitle color="primary">Category</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-                <IonButton expand="full" onClick={handleAddCategory}>
-                    <IonIcon slot="start" icon={add} />
-                    Create New Category
+                <IonButton color="tertiary" expand="full" onClick={handleAddCategory}>
+                    <IonIcon color="light" slot="start" icon={add} />
+                    <IonLabel color="light">Create New Category</IonLabel>
                 </IonButton>
                 <IonList>
                     <IonItem lines="none">
@@ -81,7 +81,7 @@ const Category: React.FC = () => {
                     {categories.filter(cat => cat.type === 'income').map((category, index) => (
                         <IonItem key={index}>
                             <IonIcon slot="start" icon={ellipse} color={parentColor.income} />
-                            <IonLabel>{category.name}</IonLabel>
+                            <IonLabel color="primary">{category.name}</IonLabel>
                             <IonButton slot="end" fill="clear" color="danger" onClick={() => handleDeleteCategory(category)}>
                                 <IonIcon icon={trash} />
                             </IonButton>
@@ -95,14 +95,14 @@ const Category: React.FC = () => {
                     {categories.filter(cat => cat.type === 'expenses').map((category, index) => (
                         <IonItem key={index}>
                             <IonIcon slot="start" icon={ellipse} color={parentColor.expenses} />
-                            <IonLabel>{category.name}</IonLabel>
+                            <IonLabel color="primary">{category.name}</IonLabel>
                             <IonButton slot="end" fill="clear" color="danger" onClick={() => handleDeleteCategory(category)}>
                                 <IonIcon icon={trash} />
                             </IonButton>
                         </IonItem>
                     ))}
                 </IonList>
-                <IonAlert
+                <IonAlert 
                     isOpen={showAlert}
                     onDidDismiss={() => setShowAlert(false)}
                     header={'Confirm Delete'}

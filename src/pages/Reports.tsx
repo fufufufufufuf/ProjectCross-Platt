@@ -16,12 +16,12 @@ const Reports: React.FC = () => {
     return (
         <IonPage>
             <IonHeader>
-                <IonToolbar>
-                    <IonTitle>Reports</IonTitle>
+                <IonToolbar color="secondary">
+                    <IonTitle color="primary">Reports</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent>
-                <ResponsiveContainer width="100%" height={400} style={{ paddingTop: '25px' }}>
+                <ResponsiveContainer color="primary" width="100%" height={400} style={{ paddingTop: '25px' }}>
                     <BarChart
                         data={data}
                         margin={{
@@ -33,10 +33,10 @@ const Reports: React.FC = () => {
                     >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" />
-                        <YAxis />
-                        <Tooltip />
+                        <YAxis  />
+                        <Tooltip  />
                         <Legend />
-                        <Bar dataKey="income" fill="var(--ion-color-success)" />
+                        <Bar  dataKey="income" fill="var(--ion-color-success)" />
                         <Bar dataKey="expense" fill="var(--ion-color-danger)" />
                     </BarChart>
                 </ResponsiveContainer>

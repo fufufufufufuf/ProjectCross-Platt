@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { IonCol, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonRow, IonAvatar, IonIcon } from '@ionic/react';
+import { IonCol, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonRow, IonAvatar, IonIcon, IonLabel } from '@ionic/react';
 import { useLocation } from 'react-router-dom';
 import { cameraOutline } from 'ionicons/icons'; // Import icon camera
 import './Home.css';
@@ -61,7 +61,7 @@ const Home: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar>
+        <IonToolbar color="secondary">
           <IonRow>
             <IonCol className="ion-text-start">
               {avatar ? (
@@ -73,24 +73,23 @@ const Home: React.FC = () => {
                   <IonIcon icon={cameraOutline} />
                 </IonAvatar>
               )}
-              {username}
+              <IonLabel color="primary">{username}</IonLabel>
             </IonCol>
             <IonCol className="ion-text-end">
               <div>
-                <span>{day.trim()}</span>
+                <IonLabel color="primary">{day.trim()}</IonLabel>
               </div>
               <div>
-                <span>{date.trim()}</span>
+              <IonLabel color="primary">{date.trim()}</IonLabel>
               </div>
             </IonCol>
           </IonRow>
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        {/* Display account balance */}
-        <div className="balance">
-          <span>Account Balance: {formatAmountToIDR(accountBalance)}</span>
-        </div>
+        <IonCol className='ion-padding'>
+          <IonLabel color="primary">Account Balance: {formatAmountToIDR(accountBalance)}</IonLabel>
+        </IonCol>
         {/* Buttons for selecting income and expense types */}
         <IonToolbar>
           <IonButton
@@ -108,16 +107,16 @@ const Home: React.FC = () => {
             Expenses
           </IonButton>
         </IonToolbar>
-        <div>
-          <span>Amount: {formatAmountToIDR(transactionDetails?.amount)}</span> {/* Display amount in Rupiah */}
-        </div>
-        <div>
-          <span>Category: {transactionDetails?.category}</span>
+        <IonRow className='ion-padding'>
+          <IonLabel color="primary">Amount: {formatAmountToIDR(transactionDetails?.amount)}</IonLabel> {/* Display amount in Rupiah */}
+        </IonRow>
+        <IonRow className='ion-padding'>
+          <IonLabel color="primary">Category: {transactionDetails?.category}</IonLabel>
           {renderCategoryIcon()}
-        </div>
-        <div>
-          <span>Date: {transactionDetails?.date}</span>
-        </div>
+        </IonRow>
+        <IonRow className='ion-padding'>
+          <IonLabel color="primary">Date: {transactionDetails?.date}</IonLabel>
+        </IonRow>
       </IonContent>
     </IonPage>
   );
