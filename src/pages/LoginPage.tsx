@@ -1,87 +1,75 @@
-// LoginPage.tsx
-
 import React, { useState } from 'react';
-import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonIcon, IonRouterLink, IonAvatar, IonRow, IonCol } from '@ionic/react';
-import { personOutline, lockClosedOutline } from 'ionicons/icons'; // Import ikon
-import { useHistory } from 'react-router-dom'; // Import useHistory hook untuk navigasi
-import './LoginPage.css'; // File CSS untuk styling
-import logo from "./../gambar/b3.png";
+import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonItem, IonGrid, IonRow, IonCol, IonCard, IonText, IonRouterLink } from '@ionic/react';
+import { useHistory } from "react-router";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { toast } from "../toast";
+import './LoginPage.css';
 
 const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const history = useHistory(); // Inisialisasi useHistory hook
+  const history = useHistory();
 
-  const handleLogin = () => {
-    // Lakukan validasi username dan password di sini
-    // Misalnya, Anda dapat menggunakan state management (misalnya Redux) atau memanggil API untuk validasi
-    // Untuk contoh ini, saya akan menggunakan validasi sederhana
-    const userData = JSON.parse(localStorage.getItem('userData') || '{}');
-    if (username === userData.username && password === userData.password) {
-      // Redirect ke halaman utama jika login berhasil
-      history.push('/home');
-    } else {
-      alert('Username atau password salah');
-    }
-  };
-
-  const handleRegisterRedirect = () => {
-    // Redirect ke halaman pendaftaran saat tombol Register ditekan
-    history.push('/register');
+  const auth = getAuth();
+  const loginHandler = () => {
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        toast("Login Berhasil");
+        console.log(userCredential);
+        history.push('/home'); // Redirect to the home page or another page after successful login
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        console.error(`Error (${errorCode}): ${errorMessage}`);
+        toast("Login failed, please check your password and email");
+      });
   };
 
   return (
     <IonPage>
-      <IonContent fullscreen className="ion-padding">
-        <div className="avatar-container">
-          <IonAvatar style={{ width: '150px', height: '150px' }}>
-            <img src={logo} alt="Avatar" />
-          </IonAvatar>
-        </div>
-        <IonRow className="ion-text-center">
-            <IonCol>
-                <div className="logo-container">
-                <IonTitle className="ion-text-center app-title">Budget Buddy</IonTitle>
-                </div>
-                <p>Login with</p>
-                <IonButton>
-                <IonIcon slot="start" src="./../gambar/g.png" />
-                    Google
-                </IonButton>
-
-                <IonButton>
-                Facebook
-                </IonButton>
-            </IonCol>
-        </IonRow>
-        <IonCol>
-            <div className="input-container">
-            <IonIcon icon={personOutline} />
-            <IonInput
-                type="text"
-                placeholder="Username"
-                value={username}
-                onIonChange={(e) => setUsername(e.detail.value!)}
-                className="input-field"
-            />
-            </div>
-            <div className="input-container">
-            <IonIcon icon={lockClosedOutline} />
-            <IonInput
-                type="password"
-                placeholder="Password"
-                value={password}
-                onIonChange={(e) => setPassword(e.detail.value!)}
-                className="input-field"
-            />
-            </div>
-        </IonCol>
-        <IonButton style={{ '--background': 'purple' }} expand="block" onClick={handleLogin}>
+      <IonContent className="ion-justify-content-center" color="light" fullscreen>
+        <IonCard className="ion-padding mg-card container-card">
+          <IonTitle className="ion-title ion-text-center ion-padding ion-margin">
             Login
-        </IonButton>
-        <div className="register-container ion-text-center">
-          <p>Don't have an account yet? <IonRouterLink onClick={handleRegisterRedirect}>Register</IonRouterLink></p>
-        </div>
+          </IonTitle>
+          <IonGrid className="mg-grid">
+            <IonRow className="ion-justify-content-between">
+              <IonCol size="0" />
+              <IonCol size="12" className="mg-col">
+                <IonItem>
+                  <IonInput
+                    type="email"
+                    placeholder="Email"
+                    onIonChange={(e: any) => setEmail(e.target.value)}
+                  />
+                </IonItem>
+                <IonItem>
+                  <IonInput
+                    type="password"
+                    placeholder="Password"
+                    onIonChange={(e: any) => setPassword(e.target.value)}
+                  />
+                </IonItem>
+              </IonCol>
+              <IonCol size="0" />
+            </IonRow>
+            <IonRow className="ion-justify-content-between ion-margin">
+              <IonCol>
+                <IonButton expand="block" onClick={loginHandler}>
+                  Login
+                </IonButton>
+              </IonCol>
+            </IonRow>
+            <IonRow className="ion-justify-content-between ion-text-center ion-margin">
+              <IonCol>
+                <IonText className="ion-margin-top">
+                  Don't have an account? <IonRouterLink href="/register">Sign Up</IonRouterLink>
+                </IonText>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+        </IonCard>
       </IonContent>
     </IonPage>
   );
