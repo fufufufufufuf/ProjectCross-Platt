@@ -12,7 +12,7 @@ const MemoryTabs: React.FC = () => {
         <IonTabs>
             <IonRouterOutlet>
                 <Redirect exact path="/tabs" to="/tabs/home"/>
-                <Route path="/tabs/Home" component={Home}/>
+                <Route path="/tabs/home" component={Home}/>
                 <Route path="/tabs/category" component={Category}/>
                 <Route path="/tabs/reports" component={Reports}/>
                 <Route path="/tabs/profile" component={Profile}/>

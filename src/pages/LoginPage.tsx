@@ -16,7 +16,7 @@ const LoginPage: React.FC = () => {
       .then((userCredential) => {
         toast("Login Berhasil");
         console.log(userCredential);
-        history.push('/home'); // Redirect to the home page or another page after successful login
+        history.push('/tabs'); // Redirect to the home page or another page after successful login
       })
       .catch((error) => {
         const errorCode = error.code;
