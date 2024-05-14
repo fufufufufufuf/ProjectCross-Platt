@@ -1,8 +1,6 @@
 // firebase.ts
 
-import firebase from 'firebase/app';
-import { getAuth } from "firebase/auth";
-import { toast } from '../toast';
+import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDabIRtpiAXM3HjD6pTMyi3zRsqfZNSmOI",
@@ -15,11 +13,8 @@ const firebaseConfig = {
 };
 
 // Inisialisasi Firebase
-const firebaseApp = firebase.initializeApp(firebaseConfig);
-
-export const auth = getAuth(firebaseApp);
-
-export default firebaseApp;
+const app = initializeApp(firebaseConfig);
+export default app;
 
 // // Membuat akun baru user
 // export async function registerUser(email: string, password: string) {
