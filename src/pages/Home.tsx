@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { IonCol, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonRow, IonAvatar, IonIcon, IonLabel } from '@ionic/react';
+import { IonCol, IonContent, IonHeader, IonPage, IonToolbar, IonRow, IonAvatar, IonIcon, IonLabel, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonGrid, IonSegment, IonSegmentButton } from '@ionic/react';
 import { useLocation } from 'react-router-dom';
-import { cameraOutline } from 'ionicons/icons'; // Import icon camera
+import { cameraOutline, arrowUpOutline, arrowDownOutline } from 'ionicons/icons'; // Import icons
 import './Home.css';
 
 // Define TransactionDetails interface
 interface TransactionDetails {
-  amount: number | undefined;
+  amount?: number;
   category: string;
   type: string;
   date: string;
-  balance: number; // Include balance in transaction details
+  balance: number;
 }
 
 const Home: React.FC = () => {
@@ -25,20 +25,37 @@ const Home: React.FC = () => {
 
   // Access transaction details and account balance from location state
   const location = useLocation();
-  const { transactionDetails, accountBalance }: { transactionDetails: TransactionDetails, accountBalance: number } = (location.state as any) || {};
+  const { transactionDetails, accountBalance }: { transactionDetails?: TransactionDetails, accountBalance?: number } = location.state || {};
 
   // Function to format amount as Rupiah (IDR)
-  const formatAmountToIDR = (amount: number | undefined): string => {
-    if (!amount) return '';
+  const formatAmountToIDR = (amount?: number): string => {
+    if (amount === undefined) return '';
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(amount);
   };
 
+  // State to keep track of total income and total expenses
+  const [totalIncome, setTotalIncome] = useState<number>(0);
+  const [totalExpenses, setTotalExpenses] = useState<number>(0);
+
+  useEffect(() => {
+    if (transactionDetails) {
+      if (transactionDetails.type === 'income') {
+        setTotalIncome(prevIncome => prevIncome + (transactionDetails.amount || 0));
+      } else if (transactionDetails.type === 'expenses') {
+        setTotalExpenses(prevExpenses => prevExpenses + (transactionDetails.amount || 0));
+      }
+    }
+  }, [transactionDetails]);
+
+  // State to manage the selected segment
+  const [selectedSegment, setSelectedSegment] = useState<string>('today');
+
   // Render icons based on category type
-  const renderCategoryIcon = () => {
-    if (transactionDetails?.type === 'income') {
-      return <span className="icon-green">&#8593;</span>; // Green arrow pointing up for income
-    } else if (transactionDetails?.type === 'expenses') {
-      return <span className="icon-red">&#8595;</span>; // Red arrow pointing down for expenses
+  const renderCategoryIcon = (type: string) => {
+    if (type === 'income') {
+      return <IonIcon icon={arrowUpOutline} className="icon-green" />; // Green arrow pointing up for income
+    } else if (type === 'expenses') {
+      return <IonIcon icon={arrowDownOutline} className="icon-red" />; // Red arrow pointing down for expenses
     }
     return null;
   };
@@ -62,8 +79,8 @@ const Home: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar color="secondary">
-          <IonRow>
-            <IonCol className="ion-text-start">
+          <IonRow className="header-content">
+            <IonCol className="ion-text-start" size="6">
               {avatar ? (
                 <IonAvatar slot="start">
                   <img src={avatar} alt="Avatar" />
@@ -73,50 +90,78 @@ const Home: React.FC = () => {
                   <IonIcon icon={cameraOutline} />
                 </IonAvatar>
               )}
-              <IonLabel color="primary">{username}</IonLabel>
+              <IonLabel color="primary" className="username">{username}</IonLabel>
             </IonCol>
-            <IonCol className="ion-text-end">
-              <div>
-                <IonLabel color="primary">{day.trim()}</IonLabel>
-              </div>
-              <div>
-              <IonLabel color="primary">{date.trim()}</IonLabel>
-              </div>
+            <IonCol className="ion-text-end" size="6">
+              <IonLabel color="primary" className="current-date">{day.trim()}, {date.trim()}</IonLabel>
             </IonCol>
           </IonRow>
         </IonToolbar>
       </IonHeader>
-      <IonContent>
-        <IonCol className='ion-padding'>
-          <IonLabel color="primary">Account Balance: {formatAmountToIDR(accountBalance)}</IonLabel>
-        </IonCol>
-        {/* Buttons for selecting income and expense types */}
-        <IonToolbar>
-          <IonButton
-            className="type-button"
-            color={transactionDetails?.type === 'income' ? 'success' : 'dark'}
-            onClick={() => console.log('Income selected')}
-          >
-            Income
-          </IonButton>
-          <IonButton
-            className="type-button"
-            color={transactionDetails?.type === 'expenses' ? 'danger' : 'dark'}
-            onClick={() => console.log('Expenses selected')}
-          >
-            Expenses
-          </IonButton>
-        </IonToolbar>
-        <IonRow className='ion-padding'>
-          <IonLabel color="primary">Amount: {formatAmountToIDR(transactionDetails?.amount)}</IonLabel> {/* Display amount in Rupiah */}
-        </IonRow>
-        <IonRow className='ion-padding'>
-          <IonLabel color="primary">Category: {transactionDetails?.category}</IonLabel>
-          {renderCategoryIcon()}
-        </IonRow>
-        <IonRow className='ion-padding'>
-          <IonLabel color="primary">Date: {transactionDetails?.date}</IonLabel>
-        </IonRow>
+      <IonContent className="ion-padding">
+        <IonGrid>
+          <IonRow className="account-balance">
+            <IonCol size="12">
+              <IonLabel color="primary" className="balance-label">Account Balance: {formatAmountToIDR(accountBalance)}</IonLabel>
+            </IonCol>
+          </IonRow>
+          <IonRow className="summary-cards">
+            <IonCol size="6">
+              <IonCard className="income-card">
+                <IonCardHeader>
+                  <IonCardTitle>Income</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  <IonLabel>{formatAmountToIDR(totalIncome)}</IonLabel>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+            <IonCol size="6">
+              <IonCard className="expenses-card">
+                <IonCardHeader>
+                  <IonCardTitle>Expenses</IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  <IonLabel>{formatAmountToIDR(totalExpenses)}</IonLabel>
+                </IonCardContent>
+              </IonCard>
+            </IonCol>
+          </IonRow>
+          <IonRow className="segment-row">
+            <IonCol size="12">
+              <IonSegment value={selectedSegment} onIonChange={e => e.detail.value && setSelectedSegment(e.detail.value)}>
+                <IonSegmentButton value="today">
+                  <IonLabel>Today</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton value="week">
+                  <IonLabel>Week</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton value="month">
+                  <IonLabel>Month</IonLabel>
+                </IonSegmentButton>
+                <IonSegmentButton value="year">
+                  <IonLabel>Year</IonLabel>
+                </IonSegmentButton>
+              </IonSegment>
+            </IonCol>
+          </IonRow>
+          <IonRow className="transaction-details">
+            <IonCol size="12">
+              <IonLabel color="primary">Amount: {formatAmountToIDR(transactionDetails?.amount)}</IonLabel>
+            </IonCol>
+          </IonRow>
+          <IonRow className="transaction-details">
+            <IonCol size="12" className="ion-align-items-center">
+              <IonLabel color="primary">Category: {transactionDetails?.category}</IonLabel>
+              {transactionDetails?.type && renderCategoryIcon(transactionDetails.type)}
+            </IonCol>
+          </IonRow>
+          <IonRow className="transaction-details">
+            <IonCol size="12">
+              <IonLabel color="primary">Date: {transactionDetails?.date}</IonLabel>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );

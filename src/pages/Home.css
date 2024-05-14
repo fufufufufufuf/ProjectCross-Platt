@@ -1,0 +1,59 @@
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .username {
+    margin-left: 10px;
+  }
+  
+  .current-date {
+    text-align: right;
+  }
+  
+  .account-balance {
+    text-align: center;
+    padding: 20px 0;
+  }
+  
+  .balance-label {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+  
+  .summary-cards {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+  }
+  
+  .income-card, .expenses-card {
+    text-align: center;
+  }
+  
+  .icon-green {
+    color: green;
+    font-size: 1.5em;
+    margin-left: 10px;
+  }
+  
+  .icon-red {
+    color: red;
+    font-size: 1.5em;
+    margin-left: 10px;
+  }
+  
+  .transaction-details {
+    padding: 10px 0;
+  }
+  
+  .segment-row {
+    padding: 10px 0;
+  }
+  
+  .ion-segment-button {
+    --indicator-color: var(--ion-color-primary);
+  }
+  

@@ -31,7 +31,6 @@ const LoginPage: React.FC = () => {
       <IonContent className="ion-justify-content-center" fullscreen>
         <IonCard className="ion-padding mg-card container-card">
           <IonTitle color="primary" className="ion-title ion-text-center ion-padding ion-margin">
-            Login
           </IonTitle>
           <IonGrid  className="mg-grid">
             <IonRow  className="ion-justify-content-between">
