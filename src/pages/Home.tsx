@@ -109,7 +109,7 @@ const Home: React.FC = () => {
             <IonCol size="6">
               <IonCard className="income-card">
                 <IonCardHeader>
-                  <IonCardTitle>Income</IonCardTitle>
+                  <IonCardTitle color="primary">Income</IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
                   <IonLabel>{formatAmountToIDR(totalIncome)}</IonLabel>
@@ -119,7 +119,7 @@ const Home: React.FC = () => {
             <IonCol size="6">
               <IonCard className="expenses-card">
                 <IonCardHeader>
-                  <IonCardTitle>Expenses</IonCardTitle>
+                  <IonCardTitle color="primary">Expenses</IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
                   <IonLabel>{formatAmountToIDR(totalExpenses)}</IonLabel>
@@ -129,7 +129,7 @@ const Home: React.FC = () => {
           </IonRow>
           <IonRow className="segment-row">
             <IonCol size="12">
-              <IonSegment value={selectedSegment} onIonChange={e => e.detail.value && setSelectedSegment(e.detail.value)}>
+              <IonSegment color="primary" scrollable={true} value={selectedSegment} onIonChange={e => e.detail.value && setSelectedSegment(e.detail.value)}>
                 <IonSegmentButton value="today">
                   <IonLabel>Today</IonLabel>
                 </IonSegmentButton>

@@ -87,10 +87,11 @@ const Add: React.FC = () => {
                 </IonGrid>
                 <IonItem>
                     <IonLabel color="primary" position="stacked">Transaction Date</IonLabel>
-                    <IonGrid>
+                    <IonGrid >
                         <IonRow>
                             <IonCol size="12" className="ion-text-center">
-                                <IonDatetime
+                                <IonDatetime 
+                                color="medium"
                                     value={transactionDate}
                                     onIonChange={(e) => setTransactionDate(Array.isArray(e.detail.value) ? e.detail.value[0] : e.detail.value!)}
                                     display-format="DD/MM/YYYY"

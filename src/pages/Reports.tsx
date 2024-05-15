@@ -21,7 +21,7 @@ const Reports: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent>
-                <ResponsiveContainer color="primary" width="100%" height={400} style={{ paddingTop: '25px' }}>
+                <ResponsiveContainer width="100%" height={400} style={{ paddingTop: '25px' }}>
                     <BarChart
                         data={data}
                         margin={{
