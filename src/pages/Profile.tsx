@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonToggle, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonIcon } from '@ionic/react';
-import { moonOutline, sunnyOutline, logOutOutline, helpCircleOutline, cloudDownloadOutline, cameraOutline } from 'ionicons/icons';
+import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonToggle, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonIcon, IonActionSheet } from '@ionic/react';
+import { moonOutline, sunnyOutline, logOutOutline, helpCircleOutline, cameraOutline, imageOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
@@ -11,6 +11,7 @@ const Profile: React.FC = () => {
     const [darkMode, setDarkMode] = useState(false);
     const [username, setUsername] = useState<string>('');
     const [avatar, setAvatar] = useState<string | null>(null);
+    const [showActionSheet, setShowActionSheet] = useState(false);
     const history = useHistory();
 
     const auth = getAuth(app);
@@ -56,25 +57,47 @@ const Profile: React.FC = () => {
             });
     };
 
-    const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
+    const handleImageUpload = (file: File) => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            const dataUrl = reader.result as string;
+            if (auth.currentUser) {
+                const avatarRef = ref(storage, `avatars/${auth.currentUser.uid}`);
+                uploadString(avatarRef, dataUrl, 'data_url')
+                    .then(() => {
+                        setAvatar(dataUrl);
+                    })
+                    .catch((error) => {
+                        console.error("Error uploading avatar:", error);
+                    });
+            }
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleFileInputChange = (event: Event) => {
+        const target = event.target as HTMLInputElement;
+        const file = target.files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                const dataUrl = reader.result as string;
-                if (auth.currentUser) {
-                    const avatarRef = ref(storage, `avatars/${auth.currentUser.uid}`);
-                    uploadString(avatarRef, dataUrl, 'data_url')
-                        .then(() => {
-                            setAvatar(dataUrl);
-                        })
-                        .catch((error) => {
-                            console.error("Error uploading avatar:", error);
-                        });
-                }
-            };
-            reader.readAsDataURL(file);
+            handleImageUpload(file);
         }
+    };
+
+    const handleCameraClick = () => {
+        const inputElement = document.createElement('input');
+        inputElement.type = 'file';
+        inputElement.accept = 'image/*';
+        inputElement.capture = 'camera';
+        inputElement.addEventListener('change', handleFileInputChange);
+        inputElement.click();
+    };
+
+    const handleGalleryClick = () => {
+        const inputElement = document.createElement('input');
+        inputElement.type = 'file';
+        inputElement.accept = 'image/*';
+        inputElement.addEventListener('change', handleFileInputChange);
+        inputElement.click();
     };
 
     const help = () => {
@@ -125,8 +148,30 @@ const Profile: React.FC = () => {
                         </IonItem>
                     </IonCardContent>
                 </IonCard>
-                <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} id="upload-avatar" />
-                <IonButton color="tertiary" expand="block" onClick={() => document.getElementById('upload-avatar')?.click()}><IonLabel color="light">Change Avatar</IonLabel></IonButton>
+                <IonButton color="tertiary" expand="block" onClick={() => setShowActionSheet(true)}>
+                    <IonLabel color="light">Change Avatar</IonLabel>
+                </IonButton>
+                <IonActionSheet
+                    isOpen={showActionSheet}
+                    onDidDismiss={() => setShowActionSheet(false)}
+                    buttons={[
+                        {
+                            text: 'Take Photo',
+                            icon: cameraOutline,
+                            handler: handleCameraClick,
+                        },
+                        {
+                            text: 'Choose from Gallery',
+                            icon: imageOutline,
+                            handler: handleGalleryClick,
+                        },
+                        {
+                            text: 'Cancel',
+                            role: 'cancel',
+                            icon: 'close',
+                        },
+                    ]}
+                />
             </IonContent>
         </IonPage>
     );
