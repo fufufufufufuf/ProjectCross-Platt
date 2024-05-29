@@ -1,13 +1,20 @@
+// NewCate.tsx
 import React, { useState } from 'react';
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonLabel, IonButton, IonInput, IonGrid, IonRow, IonCol } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonItem, IonLabel, IonButton, IonInput, IonGrid, IonRow, IonCol, IonAlert } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
 
 const NewCate: React.FC = () => {
     const [categoryName, setCategoryName] = useState('');
     const [categoryType, setCategoryType] = useState('');
+    const [showAlert, setShowAlert] = useState<boolean>(false);
     const history = useHistory();
 
     const handleSaveCategory = () => {
+        if (!categoryName || !categoryType) {
+            setShowAlert(true);
+            return;
+        }
+
         const newCategory = { name: categoryName, type: categoryType };
         const existingCategories = JSON.parse(localStorage.getItem('categories') || '[]');
         const updatedCategories = [...existingCategories, newCategory];
@@ -46,6 +53,13 @@ const NewCate: React.FC = () => {
                     </IonRow>
                 </IonGrid>
                 <IonButton color="tertiary" expand="full" onClick={handleSaveCategory}><IonLabel color="light">Save</IonLabel></IonButton>
+                <IonAlert
+                    isOpen={showAlert}
+                    onDidDismiss={() => setShowAlert(false)}
+                    header={'Alert'}
+                    message={'Please fill in all fields'}
+                    buttons={['OK']}
+                />
             </IonContent>
         </IonPage>
     );

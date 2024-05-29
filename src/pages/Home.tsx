@@ -3,6 +3,7 @@ import { IonCol, IonContent, IonHeader, IonPage, IonToolbar, IonRow, IonAvatar, 
 import { useLocation } from 'react-router-dom';
 import { cameraOutline, arrowUpOutline, arrowDownOutline } from 'ionicons/icons'; // Import icons
 import './Home.css';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 // Define TransactionDetails interface
 interface TransactionDetails {
@@ -14,7 +15,8 @@ interface TransactionDetails {
 }
 
 const Home: React.FC = () => {
-  // Function to format the current date as "Day, Month Date"
+  const [selectedSegment, setSelectedSegment] = useState<string>('today');
+  const [username, setUsername] = useState<string>('');
   const getCurrentDate = () => {
     const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
     return new Date().toLocaleDateString('en-US', options);
@@ -47,8 +49,6 @@ const Home: React.FC = () => {
     }
   }, [transactionDetails]);
 
-  // State to manage the selected segment
-  const [selectedSegment, setSelectedSegment] = useState<string>('today');
 
   // Render icons based on category type
   const renderCategoryIcon = (type: string) => {
@@ -60,36 +60,24 @@ const Home: React.FC = () => {
     return null;
   };
 
-  // Get username and avatar from local storage
-  const [username, setUsername] = useState<string>('');
-  const [avatar, setAvatar] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    const storedAvatar = localStorage.getItem('avatar');
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
-    if (storedAvatar) {
-      setAvatar(storedAvatar);
-    }
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUsername(user.displayName || '');
+      } else {
+        setUsername('');
+      }
+    });
   }, []);
-
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar color="secondary">
           <IonRow className="header-content">
             <IonCol className="ion-text-start" size="6">
-              {avatar ? (
-                <IonAvatar slot="start">
-                  <img src={avatar} alt="Avatar" />
-                </IonAvatar>
-              ) : (
-                <IonAvatar slot="start">
-                  <IonIcon icon={cameraOutline} />
-                </IonAvatar>
-              )}
+             
               <IonLabel color="primary" className="username">{username}</IonLabel>
             </IonCol>
             <IonCol className="ion-text-end" size="6">
@@ -129,7 +117,7 @@ const Home: React.FC = () => {
           </IonRow>
           <IonRow className="segment-row">
             <IonCol size="12">
-              <IonSegment color="primary" scrollable={true} value={selectedSegment} onIonChange={e => e.detail.value && setSelectedSegment(e.detail.value)}>
+            <IonSegment color="primary" scrollable={true} value={selectedSegment} onIonChange={e => e.detail.value && setSelectedSegment(e.detail.value.toString())}>
                 <IonSegmentButton value="today">
                   <IonLabel>Today</IonLabel>
                 </IonSegmentButton>

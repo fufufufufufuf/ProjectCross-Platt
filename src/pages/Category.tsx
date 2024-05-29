@@ -1,3 +1,4 @@
+// Category.tsx
 import React, { useEffect, useState } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonList, IonItem, IonLabel, IonIcon, IonButton, IonAlert } from '@ionic/react';
 import { ellipse, add, trash } from 'ionicons/icons';
@@ -125,4 +126,4 @@ const Category: React.FC = () => {
     );
 };
 
-export default Category
+export default Category;
