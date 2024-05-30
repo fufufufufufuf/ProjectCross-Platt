@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonItem, IonGrid, IonRow, IonCol, IonCard, IonText, IonRouterLink, IonLabel } from '@ionic/react';
+import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonItem, IonGrid, IonRow, IonCol, IonCard, IonText, IonRouterLink, IonLabel, IonAvatar } from '@ionic/react';
 import { useHistory } from "react-router";
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { toast } from "../toast";
-import app from "../Firebase/firebase"; // Import the initialized app
+import app from "../Firebase/firebase"; 
 import './RegisterPage.css';
+import logo from "../gambar/logo.png"
 
 const RegisterPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -13,7 +14,7 @@ const RegisterPage: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const history = useHistory();
 
-  const auth = getAuth(app); // Use the initialized app
+  const auth = getAuth(app); 
   const registerHandler = () => {
     if (password !== confirmPassword) {
       toast("Passwords do not match");
@@ -23,13 +24,12 @@ const RegisterPage: React.FC = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        // Use updateProfile to update the user's displayName
         updateProfile(user, {
           displayName: username
         }).then(() => {
           toast("Register Berhasil");
           console.log(userCredential);
-          history.push('/login'); // Redirect to the home page or another page after successful registration
+          history.push('/login'); 
         }).catch((error) => {
           console.error(`Error updating profile: ${error.message}`);
           toast("Registration succeeded but failed to set username, please update it in your profile");
@@ -47,8 +47,11 @@ const RegisterPage: React.FC = () => {
     <IonPage>
       <IonContent className="ion-justify-content-center" color="light" fullscreen>
         <IonCard className="ion-padding mg-card container-card">
-          <IonTitle color="primary" className="ion-title ion-text-center ion-padding ion-margin">
-            Register
+          <IonAvatar className="ion-margin-top ion-text-center" style={{ width: '100px', height: '100px', margin: '0 auto' }}>
+            <img src={logo} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </IonAvatar>
+          <IonTitle color="primary" className="ion-title ion-text-center ion-padding">
+            <IonText color="tertiary" className="budget-buddy-text">BudgetBuddy</IonText>
           </IonTitle>
           <IonGrid className="mg-grid">
             <IonRow className="ion-justify-content-between">

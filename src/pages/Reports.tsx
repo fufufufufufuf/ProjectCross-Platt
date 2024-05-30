@@ -1,18 +1,67 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
-const Reports: React.FC = () => {
-    const data = [
-        { name: 'January', income: 4000, expense: 2400, amt: 2400 },
-        { name: 'February', income: 3000, expense: 1398, amt: 2210 },
-        { name: 'March', income: 2000, expense: 9800, amt: 2290 },
-        { name: 'April', income: 2780, expense: 3908, amt: 2000 },
-        { name: 'May', income: 1890, expense: 4800, amt: 2181 },
-        { name: 'June', income: 2390, expense: 3800, amt: 2500 },
-        { name: 'July', income: 3490, expense: 4300, amt: 2100 },
-    ];
+interface Transaction {
+    amount: number;
+    category: string;
+    type: string;
+    date: string;
+    balance: number;
+}
 
+interface MonthlyData {
+    name: string;
+    income: number;
+    expense: number;
+}
+
+const Reports: React.FC = () => {
+    const [data, setData] = useState<MonthlyData[]>([]);
+
+    useEffect(() => {
+        const storedTransactions: Transaction[] = JSON.parse(localStorage.getItem('transactions') || '[]');
+    
+        // Filter transactions based on the current year
+        const currentYear = new Date().getFullYear();
+        const transactionsThisYear = storedTransactions.filter(transaction => {
+            return new Date(transaction.date).getFullYear() === currentYear;
+        });
+    
+        const monthlyData: MonthlyData[] = [];
+    
+        transactionsThisYear.forEach(transaction => {
+            const date = new Date(transaction.date);
+            const monthYear = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+    
+            const existingMonth = monthlyData.find(monthData => monthData.name === monthYear);
+            if (existingMonth) {
+                if (transaction.type === 'income') {
+                    existingMonth.income += transaction.amount;
+                } else if (transaction.type === 'expenses') {
+                    existingMonth.expense += transaction.amount;
+                }
+            } else {
+                const newMonthData: MonthlyData = { name: monthYear, income: 0, expense: 0 };
+                if (transaction.type === 'income') {
+                    newMonthData.income = transaction.amount;
+                } else if (transaction.type === 'expenses') {
+                    newMonthData.expense = transaction.amount;
+                }
+                monthlyData.push(newMonthData);
+            }
+        });
+    
+        // Sort monthlyData by month
+        monthlyData.sort((a, b) => {
+            const monthA = new Date(a.name).getMonth();
+            const monthB = new Date(b.name).getMonth();
+            return monthA - monthB;
+        });
+    
+        setData(monthlyData);
+    }, []);
+    
     return (
         <IonPage>
             <IonHeader>
@@ -33,10 +82,10 @@ const Reports: React.FC = () => {
                     >
                         <CartesianGrid strokeDasharray="3 3" />
                         <XAxis dataKey="name" />
-                        <YAxis  />
-                        <Tooltip  />
+                        <YAxis />
+                        <Tooltip />
                         <Legend />
-                        <Bar  dataKey="income" fill="var(--ion-color-success)" />
+                        <Bar dataKey="income" fill="var(--ion-color-success)" />
                         <Bar dataKey="expense" fill="var(--ion-color-danger)" />
                     </BarChart>
                 </ResponsiveContainer>

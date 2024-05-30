@@ -13,7 +13,7 @@ const Add: React.FC = () => {
     const [selectedType, setSelectedType] = useState<string>('');
     const [transactionDate, setTransactionDate] = useState<string>(new Date().toISOString());
     const [categories, setCategories] = useState<Category[]>([]);
-    const [accountBalance, setAccountBalance] = useState<number>(0); 
+    const [accountBalance, setAccountBalance] = useState<number>(0);
     const [showAlert, setShowAlert] = useState<boolean>(false);
     const [alertMessage, setAlertMessage] = useState<string>('');
     const history = useHistory();
@@ -27,6 +27,9 @@ const Add: React.FC = () => {
         );
 
         setCategories(uniqueCategories);
+
+        const storedBalance = parseFloat(localStorage.getItem('accountBalance') || '0');
+        setAccountBalance(storedBalance);
     }, []);
 
     const handleCategoryChange = (categoryName: string) => {
@@ -44,23 +47,31 @@ const Add: React.FC = () => {
             setShowAlert(true);
             return;
         }
+    
         const newBalance = selectedType === 'income' ? accountBalance + (amount || 0) : accountBalance - (amount || 0);
-
         setAccountBalance(newBalance);
-
+    
         const transactionDetails = {
             amount: amount,
             category: selectedCategory,
             type: selectedType,
             date: transactionDate,
-            balance: newBalance 
+            balance: newBalance
         };
-
+    
+        const storedTransactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+        storedTransactions.push(transactionDetails);
+        localStorage.setItem('transactions', JSON.stringify(storedTransactions));
+    
+        localStorage.setItem('accountBalance', newBalance.toString());
+    
+        localStorage.setItem('transactionDetails', JSON.stringify(transactionDetails));
+    
         history.push({
             pathname: '/tabs/home',
             state: { transactionDetails: transactionDetails, accountBalance: newBalance }
         });
-    };
+    };    
 
     return (
         <IonPage>
@@ -98,6 +109,7 @@ const Add: React.FC = () => {
                                     value={transactionDate}
                                     onIonChange={(e) => setTransactionDate(Array.isArray(e.detail.value) ? e.detail.value[0] : e.detail.value!)}
                                     display-format="DD/MM/YYYY"
+                                    max={new Date().toISOString()}
                                 ></IonDatetime>
                             </IonCol>
                         </IonRow>

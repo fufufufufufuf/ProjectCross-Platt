@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonItem, IonGrid, IonRow, IonCol, IonCard, IonText, IonRouterLink, IonLabel } from '@ionic/react';
+import { IonButton, IonContent, IonPage, IonTitle, IonInput, IonItem, IonGrid, IonRow, IonCol, IonCard, IonText, IonRouterLink, IonLabel, IonAvatar } from '@ionic/react';
 import { useHistory } from "react-router";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { toast } from "../toast";
 import './LoginPage.css';
+import logo from "../gambar/logo.png"
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -16,7 +17,7 @@ const LoginPage: React.FC = () => {
       .then((userCredential) => {
         toast("Login Berhasil");
         console.log(userCredential);
-        history.push('/tabs'); // Redirect to the home page or another page after successful login
+        history.push('/tabs'); 
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -30,7 +31,11 @@ const LoginPage: React.FC = () => {
     <IonPage>
       <IonContent className="ion-justify-content-center" fullscreen>
         <IonCard className="ion-padding mg-card container-card">
-          <IonTitle color="primary" className="ion-title ion-text-center ion-padding ion-margin">
+          <IonAvatar className="ion-margin-top ion-text-center" style={{ width: '100px', height: '100px', margin: '0 auto' }}>
+            <img src={logo} alt="avatar" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          </IonAvatar>
+          <IonTitle color="primary" className="ion-title ion-text-center ion-padding">
+            <IonText color="tertiary" className="budget-buddy-text">BudgetBuddy</IonText>
           </IonTitle>
           <IonGrid  className="mg-grid">
             <IonRow  className="ion-justify-content-between">

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonToggle, IonAvatar, IonItem, IonLabel, IonCard, IonCardContent, IonIcon, IonActionSheet } from '@ionic/react';
-import { moonOutline, sunnyOutline, logOutOutline, helpCircleOutline, cameraOutline, imageOutline } from 'ionicons/icons';
+import { moonOutline, sunnyOutline, logOutOutline, cameraOutline, imageOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
@@ -100,13 +100,7 @@ const Profile: React.FC = () => {
         inputElement.click();
     };
 
-    const help = () => {
-        // Logic for help
-    };
 
-    const checkUpdate = () => {
-        // Logic for checking update
-    };
 
     return (
         <IonPage>
@@ -139,12 +133,6 @@ const Profile: React.FC = () => {
                         <IonItem color="secondary" button onClick={logout}>
                             <IonIcon color="primary" icon={logOutOutline} slot="start" />
                             <IonLabel color="primary">Logout</IonLabel>
-                        </IonItem>
-                    </IonCardContent>
-                    <IonCardContent>
-                        <IonItem color="secondary" button onClick={help}>
-                            <IonIcon color="primary" icon={helpCircleOutline} slot="start" />
-                            <IonLabel color="primary">Help</IonLabel>
                         </IonItem>
                     </IonCardContent>
                 </IonCard>
