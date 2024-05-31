@@ -3,9 +3,11 @@ import { IonButton, IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonTog
 import { moonOutline, sunnyOutline, logOutOutline, cameraOutline, imageOutline } from 'ionicons/icons';
 import { useHistory } from 'react-router';
 import { getAuth, onAuthStateChanged, signOut } from 'firebase/auth';
-import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
+import { getDownloadURL, ref, uploadBytesResumable, StorageReference, getStorage, uploadBytes } from 'firebase/storage';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import app from '../Firebase/firebase';
 import "./Profile.css";
+
 
 const Profile: React.FC = () => {
     const [darkMode, setDarkMode] = useState(false);
@@ -57,41 +59,81 @@ const Profile: React.FC = () => {
             });
     };
 
-    const handleImageUpload = (file: File) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            const dataUrl = reader.result as string;
-            if (auth.currentUser) {
-                const avatarRef = ref(storage, `avatars/${auth.currentUser.uid}`);
-                uploadString(avatarRef, dataUrl, 'data_url')
-                    .then(() => {
-                        setAvatar(dataUrl);
-                    })
-                    .catch((error) => {
-                        console.error("Error uploading avatar:", error);
-                    });
+    const handleImageUpload = (dataUrl: string | null, file?: File) => {
+        if (auth.currentUser && (dataUrl || file)) {
+            const storageRef = ref(storage, `avatars/${auth.currentUser.uid}`);
+            
+            if (dataUrl) {
+                const byteArray = Uint8Array.from(atob(dataUrl.split(',')[1]), c => c.charCodeAt(0));
+                const metadata = {
+                    contentType: 'image/jpeg'
+                };
+                const uploadTask = uploadBytes(storageRef, byteArray, metadata);
+    
+                uploadTask.then((snapshot) => {
+                    getDownloadURL(snapshot.ref)
+                        .then((url) => {
+                            setAvatar(url);
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching avatar:", error);
+                        });
+                }).catch((error) => {
+                    console.error("Error uploading avatar:", error);
+                });
+            } else if (file) {
+                const metadata = {
+                    contentType: file.type
+                };
+                const uploadTask = uploadBytes(storageRef, file, metadata);
+    
+                uploadTask.then((snapshot) => {
+                    getDownloadURL(snapshot.ref)
+                        .then((url) => {
+                            setAvatar(url);
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching avatar:", error);
+                        });
+                }).catch((error) => {
+                    console.error("Error uploading avatar:", error);
+                });
             }
-        };
-        reader.readAsDataURL(file);
+        }
     };
-
+    
+    
+    
+    const handleCameraClick = async () => {
+        try {
+            const photo = await Camera.getPhoto({
+                resultType: CameraResultType.DataUrl,
+                source: CameraSource.Camera,
+                quality: 100
+            });
+            if (photo.dataUrl) {
+                handleImageUpload(photo.dataUrl);
+            } else {
+                console.error("No photo data received.");
+            }
+        } catch (error) {
+            console.error("Error taking photo:", error);
+        }
+    };
+    
     const handleFileInputChange = (event: Event) => {
         const target = event.target as HTMLInputElement;
         const file = target.files?.[0];
         if (file) {
-            handleImageUpload(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                const dataUrl = reader.result as string;
+                handleImageUpload(dataUrl, file);
+            };
+            reader.readAsDataURL(file);
         }
     };
-
-    const handleCameraClick = () => {
-        const inputElement = document.createElement('input');
-        inputElement.type = 'file';
-        inputElement.accept = 'image/*';
-        inputElement.capture = 'camera';
-        inputElement.addEventListener('change', handleFileInputChange);
-        inputElement.click();
-    };
-
+    
     const handleGalleryClick = () => {
         const inputElement = document.createElement('input');
         inputElement.type = 'file';
@@ -99,8 +141,7 @@ const Profile: React.FC = () => {
         inputElement.addEventListener('change', handleFileInputChange);
         inputElement.click();
     };
-
-
+    
 
     return (
         <IonPage>
